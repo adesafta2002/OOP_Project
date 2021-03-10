@@ -608,29 +608,50 @@ public:
     Ticket& operator=(const Ticket& ticket_sec);
     friend istream& operator>>(istream& in,Ticket& ticket);
     friend ostream& operator<<(ostream& out, const Ticket& ticket);
+    const Ticket& operator++();
+    Ticket operator++(int);
 };
 int Ticket::id_count=0;
+
+const Ticket& Ticket::operator++() {
+    this->baggage_count++;
+    return *this;
+}
+
+Ticket Ticket::operator++(int) {
+    Ticket aux(*this);
+    this->baggage_count++;
+    return aux;
+}
+
 void Ticket::setBaggage_count(int count){
     this->baggage_count = count;
 }
+
 int Ticket::getBaggage_count() {
     return this->baggage_count;
 }
+
 void Ticket::setSeat(int seat) {
     this->seat = seat;
 }
+
 int Ticket::getSeat() {
     return this->seat;
 }
+
 void Ticket::setFlight_id(int id) {
     this->flight_id = id;
 }
+
 int Ticket::getFlight_id() {
     return this->flight_id;
 }
+
 int Ticket::getTicket_id() {
     return this->ticket_id;
 }
+
 Ticket::Ticket():ticket_id(id_count++) {
     this->baggage_count=0;
     this->is_oneway = false;
@@ -641,6 +662,7 @@ Ticket::Ticket():ticket_id(id_count++) {
     this->products_number = 0;
     this->food_ordered = NULL;
 }
+
 Ticket::Ticket(int count, bool oneway,int seat, string fname, string lname,int flight_id,int number,string* food):ticket_id(id_count++){
     this->baggage_count = count;
     this->is_oneway = oneway;
@@ -655,10 +677,12 @@ Ticket::Ticket(int count, bool oneway,int seat, string fname, string lname,int f
     for(int i=0;  i < this->products_number; i++)
         this->food_ordered[i] = food[i];
 }
+
 Ticket::~Ticket() {
     if(this->food_ordered != NULL)
         delete[] this->food_ordered;
 }
+
 Ticket::Ticket(const Ticket &ticket_sec):ticket_id(ticket_sec.ticket_id) {
     this->baggage_count =  ticket_sec.baggage_count;
     this->is_oneway =  ticket_sec.is_oneway;
@@ -670,6 +694,7 @@ Ticket::Ticket(const Ticket &ticket_sec):ticket_id(ticket_sec.ticket_id) {
     for (int i = 0; i < this->products_number; ++i)
         this->food_ordered[i] =  ticket_sec.food_ordered[i];
 }
+
 Ticket& Ticket::operator=(const Ticket &ticket_sec) {
     if (this != &ticket_sec) {
         if (this->food_ordered != NULL)
@@ -686,6 +711,7 @@ Ticket& Ticket::operator=(const Ticket &ticket_sec) {
     }
     return *this;
 }
+
 ostream& operator<<(ostream& out, const Ticket& ticket){
     out<<"\nBaggage count: "<<ticket.baggage_count;
     out<<"\nIs oneway: "<<ticket.is_oneway;
@@ -701,6 +727,7 @@ ostream& operator<<(ostream& out, const Ticket& ticket){
     out<<"\nTicket ID:"<<ticket.ticket_id;
     return out;
 }
+
 istream& operator>>(istream& in, Ticket& ticket){
     cout<<"\nBaggage count: "; in>>ticket.baggage_count;
     cout<<"\nIs oneway: "; in>>ticket.is_oneway;
@@ -717,6 +744,7 @@ istream& operator>>(istream& in, Ticket& ticket){
         in>>ticket.food_ordered[i];
     return in;
 }
+
 class Food_list{
 private:
     string name;
@@ -855,7 +883,7 @@ ostream &operator<<(ostream &out, const Food_list food){
 }
 
 int main() {
-    Person a;
+    Ticket a;
     cout<<a++;
     cout<<a;
     cout<<++a;
