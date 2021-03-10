@@ -682,6 +682,7 @@ istream& operator>>(istream& in, Ticket& ticket){
         in>>ticket.food_ordered[i];
     return in;
 }
+aaaa
 
 int main() {
     Ticket a,b;
