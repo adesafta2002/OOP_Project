@@ -52,8 +52,21 @@ public:
     friend ostream& operator<<(ostream& out, const Flight& flight);
     friend istream& operator>>(istream& in, Flight& flight);
     void book_seat();
+    const Flight& operator++();
+    Flight operator++(int);
 };
 int Flight::id_count=0;
+
+const Flight& Flight::operator++() {
+    this->total_seats++;
+    return *this;
+}
+
+Flight Flight::operator++(int) {
+    Flight aux(*this);
+    this->total_seats++;
+    return aux;
+}
 
 void Flight::book_seat(){
     int ok=1,seat;
@@ -280,12 +293,16 @@ Flight::Flight(const Flight& flight_sec):flight_id(flight_sec.flight_id) {
     this->fuel_needed = flight_sec.fuel_needed;
     this->days_persons = flight_sec.days_persons;
     this->persons_bookedInNDays = new int[flight_sec.days_persons];
-    for(int i=0;i < days_persons ; ++i)
+    for(int i=0;i < days_persons ; i++)
         this->persons_bookedInNDays[i] = flight_sec.persons_bookedInNDays[i];
+    if (this->days_persons == 0)
+        this->persons_bookedInNDays = NULL;
     this->days_money = flight_sec.days_money;
     this->money_earnedInNDays = new float[flight_sec.days_money];
     for(int i=0;i < days_money ; ++i)
         this->money_earnedInNDays[i] = flight_sec.money_earnedInNDays[i];
+    if (this->days_money == 0)
+        this->money_earnedInNDays = NULL;
     this->company_name = flight_sec.company_name;
     this->crew_members_number = flight_sec.crew_members_number;
     this->crew_members_names = new string[flight_sec.crew_members_number];
@@ -336,10 +353,14 @@ Flight& Flight::operator=(const Flight& flight_sec){
         this->persons_bookedInNDays = new int[flight_sec.days_persons];
         for(int i=0;i < days_persons ; ++i)
             this->persons_bookedInNDays[i] = flight_sec.persons_bookedInNDays[i];
+        if (this->days_persons == 0)
+            this->persons_bookedInNDays = NULL;
         this->days_money = flight_sec.days_money;
         this->money_earnedInNDays = new float[flight_sec.days_money];
         for(int i=0;i < days_money ; ++i)
             this->money_earnedInNDays[i] = flight_sec.money_earnedInNDays[i];
+        if (this->days_money == 0)
+            this->money_earnedInNDays = NULL;
         this->company_name = flight_sec.company_name;
         this->crew_members_number = flight_sec.crew_members_number;
         this->crew_members_names = new string[flight_sec.crew_members_number];
@@ -359,17 +380,20 @@ ostream& operator<<(ostream& out, const Flight& flight){
     out<<"Airport name: "<<flight.airport_name<<"\n";
     out<<"Fuel needed: "<<flight.fuel_needed<<"\n";
     out<<"For the past "<<flight.days_persons<<" days this many people bought tickets: ";
-    out<<flight.persons_bookedInNDays[0];
+    if(flight.persons_bookedInNDays != NULL)
+        out<<flight.persons_bookedInNDays[0];
     for(int i=1; i<flight.days_persons; i++)
         out<<", "<<flight.persons_bookedInNDays[i];
     out<<"\n";
     out<<"For the past "<<flight.days_money<< " days the amount of money earned is: ";
-    out<<flight.money_earnedInNDays[0];
+    if(flight.money_earnedInNDays != NULL)
+        out<<flight.money_earnedInNDays[0];
     for(int i=1; i<flight.days_money;i++)
         out<<", "<<flight.money_earnedInNDays[i];
     out<<"\nThe ID for this flight is:"<<flight.flight_id;
     out<<"\nCrew members are:";
-    out<<flight.crew_members_names[0];
+    if(flight.crew_members_number != 0)
+            out<<flight.crew_members_names[0];
     for(int i=1 ; i<flight.crew_members_number; i++)
         out<<", "<<flight.crew_members_names[i];
     out<<"\nCompany name: "<<flight.company_name<<"\n";
@@ -472,9 +496,20 @@ public:
     Person& operator=(const Person& person_sec);
     friend ostream& operator<<(ostream& out, const Person& person);
     friend istream& operator>>(istream& in, Person& person);
+    const Person& operator++();
+    Person operator++(int);
 };
 int Person::id_count = 0;
 
+const Person& Person::operator++() {
+    this->age++;
+    return *this;
+}
+Person Person::operator++(int) {
+    Person aux(*this);
+    this->age++;
+    return aux;
+}
 ostream& operator<<(ostream& out, const Person& person){
     out<<"\nFirst name:"<<person.first_name;
     out<<"\nLast name:"<<person.last_name;
@@ -520,7 +555,7 @@ int Person::getPerson_id() {
 Person::Person():person_id(id_count++) {
     this->last_name = "None";
     this->first_name = "None";
-    this->age = 1;
+    this->age = 0;
 }
 
 Person::Person(string fname, string lname, int iage):person_id(id_count++) {
@@ -708,7 +743,7 @@ public:
     friend istream& operator>>(istream& in,Food_list& food);
     friend ostream& operator<<(ostream& outt, const Food_list food);
     const Food_list& operator++();
-    const Food_list operator++(int);
+    Food_list operator++(int);
 };
 const Food_list& Food_list::operator++() {
     this->price += 5;
@@ -716,7 +751,7 @@ const Food_list& Food_list::operator++() {
     this->calories_per_serving += 100;
     return *this;
 }
-const Food_list Food_list::operator++(int) {
+Food_list Food_list::operator++(int) {
     Food_list aux(*this);
     this->price += 5;
     this->quantity += 100;
@@ -820,8 +855,7 @@ ostream &operator<<(ostream &out, const Food_list food){
 }
 
 int main() {
-    Food_list a,b;
-
+    Person a;
     cout<<a++;
     cout<<a;
     cout<<++a;
