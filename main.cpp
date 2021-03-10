@@ -682,12 +682,149 @@ istream& operator>>(istream& in, Ticket& ticket){
         in>>ticket.food_ordered[i];
     return in;
 }
+class Food_list{
+private:
+    string name;
+    float price;
+    int quantity;
+    int number_of_persons;
+    int calories_per_serving;
+public:
+    void setName(string name);
+    string getName();
+    void setPrice(float price);
+    float getPrice();
+    void setQuantity(int QT);
+    int getQuantity();
+    void setNumber_of_persons(int number);
+    int getNumber_of_persons();
+    void setCalories_per_serving(int calories);
+    int getCalories_per_serving();
+    Food_list();
+    Food_list(string name, float price, int QT, int number, int calories);
+    Food_list(const Food_list& food);
+    ~Food_list();
+    Food_list& operator=(const Food_list& food);
+    friend istream& operator>>(istream& in,Food_list& food);
+    friend ostream& operator<<(ostream& outt, const Food_list food);
+    const Food_list& operator++();
+    const Food_list operator++(int);
+};
+const Food_list& Food_list::operator++() {
+    this->price += 5;
+    this->quantity += 100;
+    this->calories_per_serving += 100;
+    return *this;
+}
+const Food_list Food_list::operator++(int) {
+    Food_list aux(*this);
+    this->price += 5;
+    this->quantity += 100;
+    this->calories_per_serving += 100;
+    return aux;
+}
+void Food_list::setName(string name) {
+    this->name =  name;
+}
 
+string Food_list::getName() {
+    return this->name;
+}
+
+void Food_list::setPrice(float price) {
+    this->price = price;
+}
+
+float Food_list::getPrice() {
+    return this->price;
+}
+
+void Food_list::setQuantity(int QT) {
+    this->quantity =  QT;
+}
+
+int Food_list::getQuantity() {
+    return this->quantity;
+}
+
+void Food_list::setNumber_of_persons(int number) {
+    this->number_of_persons =  number;
+}
+
+int Food_list::getNumber_of_persons() {
+    return this->number_of_persons;
+}
+
+void Food_list::setCalories_per_serving(int calories) {
+    this->calories_per_serving =  calories;
+}
+
+int Food_list::getCalories_per_serving() {
+    return this->calories_per_serving;
+}
+
+Food_list::Food_list() {
+    this->name = "None";
+    this->price = 0;
+    this->quantity = 0;
+    this->number_of_persons = 0;
+    this->calories_per_serving = 0;
+}
+
+Food_list::Food_list(string name, float price, int QT, int number, int calories){
+    this->name = name;
+    this->price = price;
+    this->quantity = QT;
+    this->number_of_persons = number;
+    this->calories_per_serving = calories;
+}
+
+Food_list::~Food_list() = default;
+
+Food_list::Food_list(const Food_list& food) {
+    this->name = food.name;
+    this->price = food.price;
+    this->quantity = food.quantity;
+    this->number_of_persons = food.number_of_persons;
+    this->calories_per_serving = food.calories_per_serving;
+}
+
+Food_list&  Food_list::operator=(const Food_list& food){
+    if(this != &food){
+        this->name = food.name;
+        this->price = food.price;
+        this->quantity = food.quantity;
+        this->number_of_persons = food.number_of_persons;
+        this->calories_per_serving = food.calories_per_serving;
+    }
+
+    return *this;
+}
+
+istream& operator>>(istream& in,Food_list& food){
+    cout<<"\nFood name is: "; getline(in, food.name);
+    cout<<"\nPrice: "; in>>food.price;
+    cout<<"\nQuantity: "; in>>food.quantity;
+    cout<<"\nNumber of persons: "; in>>food.number_of_persons;
+    cout<<"\nCalories per serving: ";in>>food.calories_per_serving;
+    return in;
+}
+
+ostream &operator<<(ostream &out, const Food_list food){
+    out << "\nFood name is: " << food.name;
+    out << "\nPrice: " << food.price;
+    out << "\nQuantity: " << food.quantity;
+    out << "\nNumber of persons: " << food.number_of_persons;
+    out << "\nCalories per serving: " << food.calories_per_serving;
+    return out;
+}
 
 int main() {
-    Ticket a,b;
-    cin>>a;
+    Food_list a,b;
+
+    cout<<a++;
     cout<<a;
+    cout<<++a;
 
     return 0;
 }
