@@ -54,8 +54,69 @@ public:
     void book_seat();
     const Flight& operator++();
     const Flight operator++(int);
+    Flight operator+(const Flight& flight_sec);
+    Flight operator-(const Flight& flight_sec);
+    bool operator<(const Flight& flight_sec);
+    bool operator==(const Flight& flight_sec);
 };
 int Flight::id_count=0;
+
+bool Flight::operator<(const Flight &flight_sec) {
+    if(this->total_seats < flight_sec.total_seats)
+        return true;
+    if((this->total_seats == flight_sec.total_seats)&&(this->fuel_needed < flight_sec.fuel_needed))
+        return true;
+    return false;
+}
+bool Flight::operator==(const Flight& flight_sec){
+    int ok=1;
+    for(int i=0; i<crew_members_number; ++i){
+        if(this->crew_members_names[i] != flight_sec.crew_members_names[i])
+            ok=0;}
+    for(int i=0; i<= flight_sec.total_seats; ++i){
+        if(this->seats_occupied[i] != flight_sec.seats_occupied[i])
+            ok=0;}
+    for(int i=0;i < days_persons ; ++i){
+        if(this->persons_bookedInNDays[i] != flight_sec.persons_bookedInNDays[i])
+            ok=0;}
+    for(int i=0;i < days_money ; ++i){
+        if(this->money_earnedInNDays[i] != flight_sec.money_earnedInNDays[i])
+            ok=0;}
+    if(strcmp(this->airport_name, flight_sec.airport_name)!=0)
+        ok=0;
+
+    if(ok==1)
+    if((this->departure_coordinates[0] == flight_sec.departure_coordinates[0])
+    &&(this->departure_coordinates[1] == flight_sec.departure_coordinates[1])
+    &&(this->total_seats ==  flight_sec.total_seats)
+    &&(this->is_private == flight_sec.is_private)
+    &&(this->airfield_category == flight_sec.airfield_category)
+    &&(this->fuel_needed == flight_sec.fuel_needed)
+    &&(this->days_persons == flight_sec.days_persons)
+    &&(this->days_money == flight_sec.days_money)
+    &&(this->company_name == flight_sec.company_name)
+    &&(this->crew_members_number == flight_sec.crew_members_number))
+        return true;
+
+
+    return false;
+}
+
+Flight Flight::operator+(const Flight& flight_sec){
+    Flight flight;
+    flight = *this;
+    flight.total_seats = this->total_seats + flight_sec.total_seats;
+    flight.fuel_needed = this->fuel_needed + flight_sec.fuel_needed;
+    return flight;
+}
+
+Flight Flight::operator-(const Flight &flight_sec) {
+    Flight flight;
+    flight = *this;
+    flight.total_seats = this->total_seats - flight_sec.total_seats;
+    flight.fuel_needed = this->fuel_needed - flight_sec.fuel_needed;
+    return flight;
+}
 
 const Flight& Flight::operator++() {
     this->total_seats++;
@@ -498,7 +559,36 @@ public:
     friend istream& operator>>(istream& in, Person& person);
     const Person& operator++();
     Person operator++(int);
+    Person operator+(const Person& person_sec);
+    Person operator-(const Person& person_sec);
+    bool operator <(const Person& person_sec);
+    bool operator ==(const Person& person_sec);
 };
+bool Person::operator<(const Person &person_sec) {
+    if (this->age < person_sec.age)
+        return true;
+    return false;
+}
+
+bool Person::operator==(const Person &person_sec) {
+    if ((this->age == person_sec.age)&&(this->last_name == person_sec.last_name)&&(this->first_name == person_sec.first_name))
+        return true;
+    return false;
+}
+
+Person Person::operator+(const Person& person_sec){
+    Person person;
+    person = *this;
+    person.age = this->age + person_sec.age;
+    return person;
+}
+
+Person Person::operator-(const Person& person_sec){
+    Person person;
+    person = *this;
+    person.age = this->age - person_sec.age;
+    return person;
+}
 
 int Person::id_count = 0;
 
@@ -599,6 +689,12 @@ public:
     int getBaggage_count();
     void setSeat(int seat);
     int getSeat();
+    void setClient_Fname(string fname);
+    string getClient_Fname();
+    void setClient_Lname(string lname);
+    string getClient_Lname();
+    void setFood_ordered(int number, string* food);
+    string* getFood_ordered();
     void setFlight_id(int id);
     int getFlight_id();
     int getTicket_id();
@@ -611,8 +707,49 @@ public:
     friend ostream& operator<<(ostream& out, const Ticket& ticket);
     const Ticket& operator++();
     Ticket operator++(int);
+    Ticket operator+(const Ticket& ticket);
+    Ticket operator-(const Ticket& ticket);
+    bool operator<(const Ticket& ticket);
+    bool operator==(const Ticket& ticket);
 };
 int Ticket::id_count=0;
+
+Ticket Ticket::operator+(const Ticket &ticket) {
+    Ticket sec;
+    sec = *this;
+    sec.baggage_count = this->baggage_count + ticket.baggage_count;
+    return sec;
+}
+
+Ticket Ticket::operator-(const Ticket &ticket) {
+    Ticket sec;
+    sec = *this;
+    sec.baggage_count = this->baggage_count - ticket.baggage_count;
+    return sec;
+}
+
+bool Ticket::operator<(const Ticket &ticket) {
+    if(this->baggage_count < ticket.baggage_count)
+        return true;
+    return false;
+}
+
+bool Ticket::operator==(const Ticket &ticket_sec) {
+    int ok=1;
+    for (int i = 0; i < this->products_number; ++i){
+        if(this->food_ordered[i] !=  ticket_sec.food_ordered[i])
+            ok=0;}
+
+    if(ok)
+    if((this->baggage_count ==  ticket_sec.baggage_count)
+    &&(this->is_oneway == ticket_sec.is_oneway)
+    &&(this->seat == ticket_sec.seat)
+    &&(this->client_Fname == ticket_sec.client_Fname)
+    &&(this->client_Lname == ticket_sec.client_Lname)
+    &&(this->flight_id == ticket_sec.flight_id))
+        return true;
+    return false;
+}
 
 const Ticket& Ticket::operator++() {
     this->baggage_count++;
@@ -651,6 +788,35 @@ int Ticket::getFlight_id() {
 
 int Ticket::getTicket_id() {
     return this->ticket_id;
+}
+
+void Ticket::setClient_Fname(string fname){
+    this->client_Fname = fname;
+}
+
+string Ticket::getClient_Fname(){
+    return this->client_Fname;
+}
+
+void Ticket::setClient_Lname(string lname){
+    this->client_Lname = lname;
+}
+
+string Ticket::getClient_Lname(){
+    return this->client_Lname;
+}
+
+void Ticket::setFood_ordered(int number, string* food){
+    if(this->food_ordered != nullptr)
+        delete[] food_ordered;
+    this->products_number = number;
+    this->food_ordered = new string[this->products_number+1];
+    for(int i=0;  i<this->products_number; i++)
+        this->food_ordered[i] = food[i];
+}
+
+string* Ticket::getFood_ordered(){
+    return this->food_ordered;
 }
 
 Ticket::Ticket():ticket_id(id_count++) {
@@ -773,13 +939,50 @@ public:
     friend ostream& operator<<(ostream& outt, const Food_list food);
     const Food_list& operator++();
     Food_list operator++(int);
+    Food_list operator+(const Food_list& food);
+    Food_list operator-(const Food_list& food);
+    bool operator<(const Food_list& food);
+    bool operator==(const Food_list& food);
 };
+
+bool Food_list::operator<(const Food_list &food) {
+    if((this->quantity<food.quantity)&&(this->number_of_persons<food.number_of_persons)&&(this->price<food.price))
+        return true;
+    return false;
+}
+
+bool Food_list::operator==(const Food_list &food) {
+    if((this->quantity==food.quantity)&&(this->number_of_persons==food.number_of_persons)&&(this->price==food.price)&&(this->name==food.name)&&(this->calories_per_serving==food.calories_per_serving))
+        return true;
+    return false;
+}
+
+Food_list Food_list::operator+(const Food_list &food) {
+    Food_list sec;
+    sec.name = this->name + food.name;
+    sec.quantity = this->quantity + food.quantity;
+    sec.number_of_persons = this->number_of_persons + food.number_of_persons;
+    sec.calories_per_serving = this->calories_per_serving + food.calories_per_serving;
+    sec.price = this->price + food.price;
+    return sec;
+}
+
+Food_list Food_list::operator-(const Food_list &food) {
+    Food_list sec;
+    sec.quantity = this->quantity - food.quantity;
+    sec.number_of_persons = this->number_of_persons - food.number_of_persons;
+    sec.calories_per_serving = this->calories_per_serving - food.calories_per_serving;
+    sec.price = this->price - food.price;
+    return sec;
+}
+
 const Food_list& Food_list::operator++() {
     this->price += 5;
     this->quantity += 100;
     this->calories_per_serving += 100;
     return *this;
 }
+
 Food_list Food_list::operator++(int) {
     Food_list aux(*this);
     this->price += 5;
@@ -787,6 +990,7 @@ Food_list Food_list::operator++(int) {
     this->calories_per_serving += 100;
     return aux;
 }
+
 void Food_list::setName(string name) {
     this->name =  name;
 }
@@ -884,9 +1088,19 @@ ostream &operator<<(ostream &out, const Food_list food){
 }
 
 int main() {
-    Flight a,b=a;
-    cout<<a;
-    cout<<b;
+    Person a,b=a;
+    a.setAge(20);
+    Ticket c;
+    cout<<a<<b;
+    if(b==a)
+        cout<<"\nDa";
+    else
+        cout<<"\nNU";
+    if(b<a)
+        cout<<"Da";
+    else
+        cout<<"NU";
+
 
 
     return 0;
