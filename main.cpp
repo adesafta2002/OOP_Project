@@ -17,7 +17,7 @@ private:
     int crew_members_number;
     string company_name;
     string* crew_members_names;
-    int seats_occupied[500];
+    int seats_occupied[500]{};
 public:
     static int id_count;
     void setDeparture_coordinates(double latitude,double longitude);
@@ -53,7 +53,7 @@ public:
     friend istream& operator>>(istream& in, Flight& flight);
     void book_seat();
     const Flight& operator++();
-    Flight operator++(int);
+    const Flight operator++(int);
 };
 int Flight::id_count=0;
 
@@ -62,7 +62,7 @@ const Flight& Flight::operator++() {
     return *this;
 }
 
-Flight Flight::operator++(int) {
+const Flight Flight::operator++(int) {
     Flight aux(*this);
     this->total_seats++;
     return aux;
@@ -139,7 +139,7 @@ char Flight::getAirfield_category(){
 }
 
 void Flight::setAirport_name(char* name){
-    if (this->airport_name != NULL)
+    if (this->airport_name != nullptr)
         delete[] this->airport_name;
     this->airport_name = new char[strlen(name)+1];
     strcpy(this->airport_name, name);
@@ -159,7 +159,7 @@ float Flight::getFuel_needed(){
 
 void Flight::setPersons_bookedInNDays(int days1, int* persons){
     this->days_persons=days1;
-    if(this->persons_bookedInNDays != NULL)
+    if(this->persons_bookedInNDays != nullptr)
         delete[] persons_bookedInNDays;
     this->persons_bookedInNDays = new int[days_persons];
     for(int i=0;i < days1 ; ++i)
@@ -172,7 +172,7 @@ int* Flight::getPersons_bookedInNDays(){
 
 void Flight::setMoney_earnedInNDays(int days1, float* money){
     this->days_money=days1;
-    if(this->money_earnedInNDays!= NULL)
+    if(this->money_earnedInNDays!= nullptr)
         delete[] money_earnedInNDays;
     this->money_earnedInNDays = new float[days_money];
     for(int i=0;i < days1 ; ++i)
@@ -197,7 +197,7 @@ string Flight::getCompany_name(){
 
 void Flight::setCrew_members_names(int number, string* names){
     this->crew_members_number = number;
-    if(this->crew_members_names != NULL)
+    if(this->crew_members_names != nullptr)
         delete[] crew_members_names;
     this->crew_members_names = new string[number];
     for(int i=0; i<crew_members_number; ++i)
@@ -225,12 +225,12 @@ Flight::Flight():flight_id(id_count++) {
     strcpy(this->airport_name, "None");
     this->fuel_needed = 0;
     this->days_persons = 0;
-    this->persons_bookedInNDays = NULL;
+    this->persons_bookedInNDays = nullptr;
     this->days_money = 0;
-    this->money_earnedInNDays = NULL;
+    this->money_earnedInNDays = nullptr;
     this->company_name = "None";
     this->crew_members_number = 0;
-    this->crew_members_names = NULL;
+    this->crew_members_names = nullptr;
     for(int i=0; i <= this->total_seats; i++)
         seats_occupied[i]=0;
 }
@@ -242,7 +242,7 @@ Flight::Flight(double latitude, double longitude, int seat_number, bool type,cha
     this->is_private = type;
     this->airfield_category = category;
 
-    if(this->airport_name != NULL)
+    if(this->airport_name != nullptr)
         delete[] this->airport_name;
     this->airport_name = new char[strlen(name)+1];
     strcpy(this->airport_name, name);
@@ -250,14 +250,14 @@ Flight::Flight(double latitude, double longitude, int seat_number, bool type,cha
     this->fuel_needed = fuel;
 
     this->days_persons=days1;
-    if(this->persons_bookedInNDays != NULL)
+    if(this->persons_bookedInNDays != nullptr)
         delete[] persons_bookedInNDays;
     this->persons_bookedInNDays = new int[days_persons];
     for(int i=0;i < days1 ; ++i)
         this->persons_bookedInNDays[i] = persons[i];
 
     this->days_money=days2;
-    if(this->money_earnedInNDays!= NULL)
+    if(this->money_earnedInNDays!= nullptr)
         delete[] money_earnedInNDays;
     this->money_earnedInNDays = new float[days_money];
     for(int i=0;i < days1 ; ++i)
@@ -266,7 +266,7 @@ Flight::Flight(double latitude, double longitude, int seat_number, bool type,cha
     this->company_name = company;
 
     this->crew_members_number = number;
-    if(this->crew_members_names != NULL)
+    if(this->crew_members_names != nullptr)
         delete[] crew_members_names;
     this->crew_members_names = new string[number];
     for(int i=0; i<crew_members_number; ++i)
@@ -296,13 +296,13 @@ Flight::Flight(const Flight& flight_sec):flight_id(flight_sec.flight_id) {
     for(int i=0;i < days_persons ; i++)
         this->persons_bookedInNDays[i] = flight_sec.persons_bookedInNDays[i];
     if (this->days_persons == 0)
-        this->persons_bookedInNDays = NULL;
+        this->persons_bookedInNDays = nullptr;
     this->days_money = flight_sec.days_money;
     this->money_earnedInNDays = new float[flight_sec.days_money];
     for(int i=0;i < days_money ; ++i)
         this->money_earnedInNDays[i] = flight_sec.money_earnedInNDays[i];
     if (this->days_money == 0)
-        this->money_earnedInNDays = NULL;
+        this->money_earnedInNDays = nullptr;
     this->company_name = flight_sec.company_name;
     this->crew_members_number = flight_sec.crew_members_number;
     this->crew_members_names = new string[flight_sec.crew_members_number];
@@ -314,31 +314,31 @@ Flight::Flight(const Flight& flight_sec):flight_id(flight_sec.flight_id) {
 
 Flight::~Flight() {
 
-    if(this->airport_name != NULL)
+    if(this->airport_name != nullptr)
         delete[] this->airport_name;
 
-    if(this->persons_bookedInNDays != NULL)
+    if(this->persons_bookedInNDays != nullptr)
         delete[] persons_bookedInNDays;
 
-    if(this->money_earnedInNDays!= NULL)
+    if(this->money_earnedInNDays!= nullptr)
         delete[] money_earnedInNDays;
 
-    if(this->crew_members_names != NULL)
+    if(this->crew_members_names != nullptr)
         delete[] crew_members_names;
 }
 Flight& Flight::operator=(const Flight& flight_sec){
     if(this != &flight_sec){
 
-        if(this->airport_name != NULL)
+        if(this->airport_name != nullptr)
             delete[] this->airport_name;
 
-        if(this->persons_bookedInNDays != NULL)
+        if(this->persons_bookedInNDays != nullptr)
             delete[] persons_bookedInNDays;
 
-        if(this->money_earnedInNDays!= NULL)
+        if(this->money_earnedInNDays!= nullptr)
             delete[] money_earnedInNDays;
 
-        if(this->crew_members_names != NULL)
+        if(this->crew_members_names != nullptr)
             delete[] crew_members_names;
 
         this->departure_coordinates[0] = flight_sec.departure_coordinates[0];
@@ -354,13 +354,13 @@ Flight& Flight::operator=(const Flight& flight_sec){
         for(int i=0;i < days_persons ; ++i)
             this->persons_bookedInNDays[i] = flight_sec.persons_bookedInNDays[i];
         if (this->days_persons == 0)
-            this->persons_bookedInNDays = NULL;
+            this->persons_bookedInNDays = nullptr;
         this->days_money = flight_sec.days_money;
         this->money_earnedInNDays = new float[flight_sec.days_money];
         for(int i=0;i < days_money ; ++i)
             this->money_earnedInNDays[i] = flight_sec.money_earnedInNDays[i];
         if (this->days_money == 0)
-            this->money_earnedInNDays = NULL;
+            this->money_earnedInNDays = nullptr;
         this->company_name = flight_sec.company_name;
         this->crew_members_number = flight_sec.crew_members_number;
         this->crew_members_names = new string[flight_sec.crew_members_number];
@@ -380,13 +380,13 @@ ostream& operator<<(ostream& out, const Flight& flight){
     out<<"Airport name: "<<flight.airport_name<<"\n";
     out<<"Fuel needed: "<<flight.fuel_needed<<"\n";
     out<<"For the past "<<flight.days_persons<<" days this many people bought tickets: ";
-    if(flight.persons_bookedInNDays != NULL)
+    if(flight.persons_bookedInNDays != nullptr)
         out<<flight.persons_bookedInNDays[0];
     for(int i=1; i<flight.days_persons; i++)
         out<<", "<<flight.persons_bookedInNDays[i];
     out<<"\n";
     out<<"For the past "<<flight.days_money<< " days the amount of money earned is: ";
-    if(flight.money_earnedInNDays != NULL)
+    if(flight.money_earnedInNDays != nullptr)
         out<<flight.money_earnedInNDays[0];
     for(int i=1; i<flight.days_money;i++)
         out<<", "<<flight.money_earnedInNDays[i];
@@ -429,7 +429,7 @@ istream & operator>>(istream& in, Flight& flight){
     cout<<"\nAirport name: ";
     char auxiliary[100];
     in>>auxiliary;
-    if(flight.airport_name != NULL)
+    if(flight.airport_name != nullptr)
         delete[] flight.airport_name;
     flight.airport_name = new char[strlen(auxiliary)+1];
     strcpy(flight.airport_name,auxiliary);
@@ -438,7 +438,7 @@ istream & operator>>(istream& in, Flight& flight){
     cout<<"\nDays in which people booked: ";
     in>>flight.days_persons;
     cout<<"\nNumber of people for each day:";
-    if(flight.persons_bookedInNDays != NULL)
+    if(flight.persons_bookedInNDays != nullptr)
         delete[] flight.persons_bookedInNDays;
     flight.persons_bookedInNDays = new int[flight.days_persons];
     for(int i=0; i < flight.days_persons; i++)
@@ -446,14 +446,14 @@ istream & operator>>(istream& in, Flight& flight){
     cout<<"\nDays in which money were earned: ";
     in>>flight.days_money;
     cout<<"\nMoney earned each day: ";
-    if(flight.money_earnedInNDays != NULL)
+    if(flight.money_earnedInNDays != nullptr)
         delete[] flight.money_earnedInNDays;
     flight.money_earnedInNDays = new float[flight.days_money];
     for(int i=0; i < flight.days_money; i++)
         in>>flight.money_earnedInNDays[i];
     cout<<"\nCrew members number:";
     in>>flight.crew_members_number;
-    if(flight.crew_members_names != NULL)
+    if(flight.crew_members_names != nullptr)
         delete[] flight.crew_members_names;
     cout<<"\nCrew:";
     flight.crew_members_names = new string[flight.crew_members_number];
@@ -499,6 +499,7 @@ public:
     const Person& operator++();
     Person operator++(int);
 };
+
 int Person::id_count = 0;
 
 const Person& Person::operator++() {
@@ -525,7 +526,7 @@ istream& operator>>(istream& in, Person& person){
 }
 
 void Person::setFirst_name(string fname) {
-    this->first_name=fname;
+    this->first_name = fname;
 }
 
 string Person::getFirst_name() {
@@ -533,7 +534,7 @@ string Person::getFirst_name() {
 }
 
 void Person::setLast_name(string lname) {
-    this->last_name=lname;
+    this->last_name = lname;
 }
 
 string Person::getLast_name() {
@@ -564,7 +565,7 @@ Person::Person(string fname, string lname, int iage):person_id(id_count++) {
     this->age = iage;
 }
 
-Person::~Person() {}
+Person::~Person() = default;
 
 Person::Person(const Person& person_sec):person_id(person_sec.person_id){
     this->last_name = person_sec.last_name;
@@ -660,7 +661,7 @@ Ticket::Ticket():ticket_id(id_count++) {
     this->client_Lname = "None";
     this->flight_id = 0;
     this->products_number = 0;
-    this->food_ordered = NULL;
+    this->food_ordered = nullptr;
 }
 
 Ticket::Ticket(int count, bool oneway,int seat, string fname, string lname,int flight_id,int number,string* food):ticket_id(id_count++){
@@ -671,7 +672,7 @@ Ticket::Ticket(int count, bool oneway,int seat, string fname, string lname,int f
     this->client_Lname = lname;
     this->flight_id = flight_id;
     this->products_number = number;
-    if(this->food_ordered != NULL)
+    if(this->food_ordered != nullptr)
         delete[] this->food_ordered;
     this->food_ordered =  new string[this->products_number+1];
     for(int i=0;  i < this->products_number; i++)
@@ -679,7 +680,7 @@ Ticket::Ticket(int count, bool oneway,int seat, string fname, string lname,int f
 }
 
 Ticket::~Ticket() {
-    if(this->food_ordered != NULL)
+    if(this->food_ordered != nullptr)
         delete[] this->food_ordered;
 }
 
@@ -697,7 +698,7 @@ Ticket::Ticket(const Ticket &ticket_sec):ticket_id(ticket_sec.ticket_id) {
 
 Ticket& Ticket::operator=(const Ticket &ticket_sec) {
     if (this != &ticket_sec) {
-        if (this->food_ordered != NULL)
+        if (this->food_ordered != nullptr)
             delete[] this->food_ordered;
         this->baggage_count = ticket_sec.baggage_count;
         this->is_oneway = ticket_sec.is_oneway;
@@ -720,7 +721,7 @@ ostream& operator<<(ostream& out, const Ticket& ticket){
     out<<"\nLast name: "<<ticket.client_Lname;
     out<<"\nFlight id: "<<ticket.flight_id;
     out<<"\nThe products ordered: ";
-    if (ticket.food_ordered != NULL)
+    if (ticket.food_ordered != nullptr)
         out<<ticket.food_ordered[0];
     for(int i=1; i<ticket.products_number; i++)
         out<<", "<<ticket.food_ordered[i];
@@ -736,7 +737,7 @@ istream& operator>>(istream& in, Ticket& ticket){
     cout<<"\nLast name: "; in>>ticket.client_Lname;
     cout<<"\nFlight ID: "; in>>ticket.flight_id;
     cout<<"\nProducts ordered: ";in>>ticket.products_number;
-    if(ticket.food_ordered != NULL)
+    if(ticket.food_ordered != nullptr)
         delete[] ticket.food_ordered;
     ticket.food_ordered = new string[ticket.products_number+1];
     cout<<"\nProducts: ";
@@ -883,10 +884,10 @@ ostream &operator<<(ostream &out, const Food_list food){
 }
 
 int main() {
-    Ticket a;
-    cout<<a++;
+    Flight a,b=a;
     cout<<a;
-    cout<<++a;
+    cout<<b;
+
 
     return 0;
 }
