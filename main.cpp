@@ -58,8 +58,17 @@ public:
     Flight operator-(const Flight& flight_sec);
     bool operator<(const Flight& flight_sec);
     bool operator==(const Flight& flight_sec);
+    int& operator[](int i);
 };
 int Flight::id_count=0;
+
+int& Flight::operator[](int i) {
+    if(i>total_seats){
+        cout<<"\nIndex out of range! Converted to max index.\n";
+        return seats_occupied[total_seats];
+    }
+    return this->seats_occupied[i];
+}
 
 bool Flight::operator<(const Flight &flight_sec) {
     if(this->total_seats < flight_sec.total_seats)
@@ -268,7 +277,7 @@ void Flight::setCrew_members_names(int number, string* names){
 void Flight::setSeats_occupied(int Snumber, int *seats){
     for(int i=0; i <= this->total_seats; i++)
         seats_occupied[i]=0;
-    for(int i=0; i<Snumber; ++i)
+    for(int i=0; i<=Snumber; ++i)
         this->seats_occupied[seats[i]] = 1 ;
 }
 
@@ -334,7 +343,7 @@ Flight::Flight(double latitude, double longitude, int seat_number, bool type,cha
         this->crew_members_names[i] = names[i];
     for(int i=1; i <= this->total_seats; i++)
         seats_occupied[i]=0;
-    for(int i=1; i<Snumber; ++i)
+    for(int i=1; i<=Snumber; ++i)
         this->seats_occupied[seats[i]] = 1 ;
 }
 
@@ -552,6 +561,7 @@ public:
     int getPerson_id();
     Person();
     Person(string fname, string lname, int iage);
+    Person(int iage);
     ~Person();
     Person(const Person& person_sec);
     Person& operator=(const Person& person_sec);
@@ -563,11 +573,20 @@ public:
     Person operator-(const Person& person_sec);
     bool operator <(const Person& person_sec);
     bool operator ==(const Person& person_sec);
+    string& operator[](int i);
+
 };
 bool Person::operator<(const Person &person_sec) {
     if (this->age < person_sec.age)
         return true;
     return false;
+}
+
+string& Person::operator[](int i) {
+    if(i == 1)
+        return this->first_name;
+    else
+        return this->last_name;
 }
 
 bool Person::operator==(const Person &person_sec) {
@@ -654,6 +673,9 @@ Person::Person(string fname, string lname, int iage):person_id(id_count++) {
     this->first_name = fname;
     this->age = iage;
 }
+Person::Person(int iage):person_id(id_count++) {
+    this->age = iage;
+}
 
 Person::~Person() = default;
 
@@ -700,6 +722,7 @@ public:
     int getTicket_id();
     Ticket();
     Ticket(int count, bool oneway,int seat, string fname, string lname,int flight_id,int number,string* food);
+    Ticket(int count, bool oneway,int seat, string fname, string lname);
     ~Ticket();
     Ticket(const Ticket& ticket_sec);
     Ticket& operator=(const Ticket& ticket_sec);
@@ -711,8 +734,21 @@ public:
     Ticket operator-(const Ticket& ticket);
     bool operator<(const Ticket& ticket);
     bool operator==(const Ticket& ticket);
+    string& operator[](int i);
 };
 int Ticket::id_count=0;
+
+string& Ticket::operator[](int i) {
+    if(i > this->products_number){
+        if(products_number !=  0){
+        cout<<"Index out of range!  Returned client last name";
+        return this->food_ordered[0];}
+        else{
+            return this->client_Lname;
+        }
+    }
+    return this->food_ordered[i];
+}
 
 Ticket Ticket::operator+(const Ticket &ticket) {
     Ticket sec;
@@ -830,6 +866,14 @@ Ticket::Ticket():ticket_id(id_count++) {
     this->food_ordered = nullptr;
 }
 
+Ticket::Ticket(int count, bool oneway,int seat, string fname, string lname):ticket_id(id_count++){
+    this->baggage_count = count;
+    this->is_oneway = oneway;
+    this->seat = seat;
+    this->client_Fname = fname;
+    this->client_Lname = lname;
+}
+
 Ticket::Ticket(int count, bool oneway,int seat, string fname, string lname,int flight_id,int number,string* food):ticket_id(id_count++){
     this->baggage_count = count;
     this->is_oneway = oneway;
@@ -919,7 +963,9 @@ private:
     int quantity;
     int number_of_persons;
     int calories_per_serving;
+    const int identification_code;
 public:
+    static int count;
     void setName(string name);
     string getName();
     void setPrice(float price);
@@ -930,8 +976,10 @@ public:
     int getNumber_of_persons();
     void setCalories_per_serving(int calories);
     int getCalories_per_serving();
+    int getIdentification_code();
     Food_list();
     Food_list(string name, float price, int QT, int number, int calories);
+    Food_list(string name);
     Food_list(const Food_list& food);
     ~Food_list();
     Food_list& operator=(const Food_list& food);
@@ -943,7 +991,22 @@ public:
     Food_list operator-(const Food_list& food);
     bool operator<(const Food_list& food);
     bool operator==(const Food_list& food);
+    int& operator[](int i);
 };
+int Food_list::count = 0;
+
+int& Food_list::operator[](int i) {
+    if (i == 1)
+        return quantity;
+    if (i == 2)
+        return number_of_persons;
+    else
+        return calories_per_serving;
+}
+
+int Food_list::getIdentification_code() {
+    return this->identification_code;
+}
 
 bool Food_list::operator<(const Food_list &food) {
     if((this->quantity<food.quantity)&&(this->number_of_persons<food.number_of_persons)&&(this->price<food.price))
@@ -1031,7 +1094,7 @@ int Food_list::getCalories_per_serving() {
     return this->calories_per_serving;
 }
 
-Food_list::Food_list() {
+Food_list::Food_list():identification_code(count++) {
     this->name = "None";
     this->price = 0;
     this->quantity = 0;
@@ -1039,7 +1102,7 @@ Food_list::Food_list() {
     this->calories_per_serving = 0;
 }
 
-Food_list::Food_list(string name, float price, int QT, int number, int calories){
+Food_list::Food_list(string name, float price, int QT, int number, int calories):identification_code(count++){
     this->name = name;
     this->price = price;
     this->quantity = QT;
@@ -1047,9 +1110,13 @@ Food_list::Food_list(string name, float price, int QT, int number, int calories)
     this->calories_per_serving = calories;
 }
 
+Food_list::Food_list(string name):identification_code(count++){
+    this->name = name;
+}
+
 Food_list::~Food_list() = default;
 
-Food_list::Food_list(const Food_list& food) {
+Food_list::Food_list(const Food_list& food):identification_code(food.identification_code) {
     this->name = food.name;
     this->price = food.price;
     this->quantity = food.quantity;
@@ -1088,10 +1155,9 @@ ostream &operator<<(ostream &out, const Food_list food){
 }
 
 int main() {
-    Person a,b=a;
-    a.setAge(20);
-    Ticket c;
+    Food_list a,b=a;
     cout<<a<<b;
+    cout<<endl<<a[3]<<endl;
     if(b==a)
         cout<<"\nDa";
     else
