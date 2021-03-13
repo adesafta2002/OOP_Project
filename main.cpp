@@ -720,6 +720,8 @@ public:
     void setFlight_id(int id);
     int getFlight_id();
     int getTicket_id();
+    void addNewBaggage();
+    void addProduct(string name);
     Ticket();
     Ticket(int count, bool oneway,int seat, string fname, string lname,int flight_id,int number,string* food);
     Ticket(int count, bool oneway,int seat, string fname, string lname);
@@ -855,6 +857,24 @@ string* Ticket::getFood_ordered(){
     return this->food_ordered;
 }
 
+void Ticket::addNewBaggage() {
+    this->baggage_count++;
+}
+void Ticket::addProduct(string name){
+    products_number++;
+    string* aux;
+    aux =  new string[products_number+1];
+    for(int i=0;  i<this->products_number-1; i++)
+         aux[i] = this->food_ordered[i];
+    aux[this->products_number-1] = name;
+    if(this->food_ordered != NULL)
+        delete[] this->food_ordered;
+    this->food_ordered =  new string[products_number+1];
+    for(int i=0;  i<this->products_number; i++)
+        this->food_ordered[i] = aux[i];
+    delete[] aux;
+}
+
 Ticket::Ticket():ticket_id(id_count++) {
     this->baggage_count=0;
     this->is_oneway = false;
@@ -940,8 +960,13 @@ ostream& operator<<(ostream& out, const Ticket& ticket){
 }
 
 istream& operator>>(istream& in, Ticket& ticket){
+    int aux;
     cout<<"\nBaggage count: "; in>>ticket.baggage_count;
-    cout<<"\nIs oneway: "; in>>ticket.is_oneway;
+    cout<<"\nIs oneway (0/1): "; in>>aux;
+    if (aux)
+        ticket.is_oneway = true;
+    else
+        ticket.is_oneway = false;
     cout<<"\nSeat: "; in>>ticket.seat;
     cout<<"\nFirst name: "; in>>ticket.client_Fname;
     cout<<"\nLast name: "; in>>ticket.client_Lname;
@@ -1155,9 +1180,14 @@ ostream &operator<<(ostream &out, const Food_list food){
 }
 
 int main() {
+    /*string n="Salcioara";
+    getline(cin,n);
     Food_list a,b=a;
     cout<<a<<b;
     cout<<endl<<a[3]<<endl;
+    for (int i = 0; i < n.size(); ++i) {
+        cout<<n[i];
+    }
     if(b==a)
         cout<<"\nDa";
     else
@@ -1165,7 +1195,11 @@ int main() {
     if(b<a)
         cout<<"Da";
     else
-        cout<<"NU";
+        cout<<"NU";*/
+    Ticket l;
+    cin>>l;
+    l.addProduct("ag");
+    cout<<l;
 
 
 
