@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <string>
 using namespace std;
 class Flight{
 private:
@@ -40,6 +41,7 @@ public:
     void setCompany_name(string company);
     string getCompany_name();
     void setCrew_members_names(int number, string* names);
+    string* getCrew_members_names();
     void setSeats_occupied(int Snumber, int* seats);
     int* getSeats_occupied();
     Flight();
@@ -59,6 +61,7 @@ public:
     bool operator<(const Flight& flight_sec);
     bool operator==(const Flight& flight_sec);
     int& operator[](int i);
+
 };
 int Flight::id_count=0;
 
@@ -169,10 +172,19 @@ void Flight::book_seat(){
     }
     cin>>seat;
     while ((this->seats_occupied[seat]==1)||(seat>this->total_seats)||(seat<1)){
-        cout<<"\nThis seat is already booked, please select another!";
+        cout<<"\nThis seat is already booked, please select another OR -1 to exit!" ;
         cin>>seat;
+        if(seat==-1){
+            ok=0;
+            break;
+        }
     }
-    this->seats_occupied[seat] = 1;
+    if(ok) {
+        this->seats_occupied[seat] = 1;
+    }
+    else{
+        cout<<"\nNo seat was booked!\n";
+    }
 }
 
 void Flight::setDeparture_coordinates(double latitude,double longitude){
@@ -274,7 +286,11 @@ void Flight::setCrew_members_names(int number, string* names){
         this->crew_members_names[i] = names[i];
 }
 
-void Flight::setSeats_occupied(int Snumber, int *seats){
+string* Flight::getCrew_members_names(){
+    return this->crew_members_names;
+}
+
+void Flight:: setSeats_occupied(int Snumber, int *seats){
     for(int i=0; i <= this->total_seats; i++)
         seats_occupied[i]=0;
     for(int i=0; i<=Snumber; ++i)
@@ -559,6 +575,7 @@ public:
     void setAge(int iage);
     int getAge();
     int getPerson_id();
+    string askForFullName();
     Person();
     Person(string fname, string lname, int iage);
     Person(int iage);
@@ -580,6 +597,10 @@ bool Person::operator<(const Person &person_sec) {
     if (this->age < person_sec.age)
         return true;
     return false;
+}
+
+string Person::askForFullName(){
+    return (this->first_name + ' ' +this->last_name);
 }
 
 string& Person::operator[](int i) {
@@ -732,8 +753,8 @@ public:
     friend ostream& operator<<(ostream& out, const Ticket& ticket);
     const Ticket& operator++();
     Ticket operator++(int);
-    Ticket operator+(const Ticket& ticket);
-    Ticket operator-(const Ticket& ticket);
+    friend Ticket operator+(const Ticket& tic,int x);
+    friend Ticket operator-(const Ticket& tic,int x);
     bool operator<(const Ticket& ticket);
     bool operator==(const Ticket& ticket);
     string& operator[](int i);
@@ -752,17 +773,15 @@ string& Ticket::operator[](int i) {
     return this->food_ordered[i];
 }
 
-Ticket Ticket::operator+(const Ticket &ticket) {
-    Ticket sec;
-    sec = *this;
-    sec.baggage_count = this->baggage_count + ticket.baggage_count;
+Ticket operator+(const Ticket& tic, int x) {
+    Ticket sec(tic);
+    sec.baggage_count += x;
     return sec;
 }
 
-Ticket Ticket::operator-(const Ticket &ticket) {
-    Ticket sec;
-    sec = *this;
-    sec.baggage_count = this->baggage_count - ticket.baggage_count;
+Ticket operator-(const Ticket& tic, int x) {
+    Ticket sec(tic);
+    sec.baggage_count -= x;
     return sec;
 }
 
@@ -870,7 +889,7 @@ void Ticket::addProduct(string name){
     if(this->food_ordered != NULL)
         delete[] this->food_ordered;
     this->food_ordered =  new string[products_number+1];
-    for(int i=0;  i<this->products_number; i++)
+    for(int i=0;  i<this->products_number; ++i)
         this->food_ordered[i] = aux[i];
     delete[] aux;
 }
@@ -1002,6 +1021,7 @@ public:
     void setCalories_per_serving(int calories);
     int getCalories_per_serving();
     int getIdentification_code();
+    int totalCalories();
     Food_list();
     Food_list(string name, float price, int QT, int number, int calories);
     Food_list(string name);
@@ -1019,6 +1039,10 @@ public:
     int& operator[](int i);
 };
 int Food_list::count = 0;
+
+int Food_list::totalCalories() {
+    return (this->calories_per_serving*this->number_of_persons);
+}
 
 int& Food_list::operator[](int i) {
     if (i == 1)
@@ -1047,7 +1071,7 @@ bool Food_list::operator==(const Food_list &food) {
 
 Food_list Food_list::operator+(const Food_list &food) {
     Food_list sec;
-    sec.name = this->name + food.name;
+    sec.name = this->name +", "+ food.name;
     sec.quantity = this->quantity + food.quantity;
     sec.number_of_persons = this->number_of_persons + food.number_of_persons;
     sec.calories_per_serving = this->calories_per_serving + food.calories_per_serving;
@@ -1180,28 +1204,165 @@ ostream &operator<<(ostream &out, const Food_list food){
 }
 
 int main() {
-    /*string n="Salcioara";
-    getline(cin,n);
-    Food_list a,b=a;
-    cout<<a<<b;
-    cout<<endl<<a[3]<<endl;
-    for (int i = 0; i < n.size(); ++i) {
-        cout<<n[i];
+    /*teste Flight*/
+    /*Flight flight;
+    flight.setDeparture_coordinates(1,1);
+    cout<<flight.getDeparture_coordinates();
+    flight.setTotal_seats(2);
+    cout<<flight.getTotal_seats();
+    flight.setIs_private(true);
+    cout<<flight.getIs_private();
+    flight.setAirfield_category('A');
+    cout<<flight.getAirfield_category();
+    char *cc;
+    cc= new char[2];
+    cc[0]='a';
+    cc[1]='b';
+    flight.setAirport_name(cc);
+    cout<<flight.getAirport_name();
+    flight.setFuel_needed(10.2);
+    cout<<flight.getFuel_needed();
+    int* p;
+    p = new int[2];
+    p[0]=1;
+    p[1]=2;
+    flight.setPersons_bookedInNDays(2,p);
+    cout<<flight.getPersons_bookedInNDays();
+    float* c;
+    c = new float[2];
+    c[0]=1;
+    c[1]=2;
+    flight.setMoney_earnedInNDays(2, c);
+    cout<<flight.getMoney_earnedInNDays();
+    cout<<flight.getFlight_id();
+    flight.setCompany_name("");
+    cout<<flight.getCompany_name();
+    string* l;
+    l = new string[2];
+    l[0] = "nicusor";
+    l[1] = "nicusor2";
+    flight.setCrew_members_names(2, l);
+    cout<<flight.getCrew_members_names();
+    int r[3];
+    r[1]=2;
+    r[2]=3;
+    r[3]=123;
+    flight.setSeats_occupied(2, r);
+    cout<<flight.getSeats_occupied();
+    Flight b(flight),m;
+    m=b;
+    cout<<m;
+    cin>>flight;
+    flight.book_seat();
+    flight++;
+    cout<<flight+m;
+    cout<<flight-m;
+    m=b;
+    if (m==b) {
+        cout << "da";
     }
-    if(b==a)
+    else
+        cout<<"NU";
+    if (m<b) {
+        cout << "da";
+    }
+    else
+        cout<<"NU";
+    Person person;
+    person.setFirst_name("abdrei");
+    cout<<person.getFirst_name();
+    person.setLast_name("avrea");
+    cout<<person.getLast_name();
+    person.setAge(22);
+    cout<<person.getAge();
+    cout<<person.getPerson_id();
+    cout<<person.askForFullName();
+    Person sec(person),la;
+    sec=person;
+    cout<<sec;
+    cin>>la;
+    la++;
+    cout<<la+sec;
+    cout<<la-sec;
+    if (sec==person) {
+        cout << "da";
+    }
+    else
+        cout<<"NU";
+    if (sec<la) {
+        cout << "da";
+    }
+    else
+        cout<<"NU";
+    cout<<person[1];*/
+    /*Ticket test*/
+    Ticket tic,tic2;
+    /*
+    tic.setBaggage_count(2);
+    cout<<tic.getBaggage_count();
+    tic.setSeat(2);
+    cout<<tic.getSeat();
+    tic.setClient_Fname("adasdas");
+    cout<<tic.getClient_Fname();
+    tic.setClient_Lname("212312");
+    cout<<tic.getClient_Lname();
+    string* fd;
+    fd= new string[2];
+    fd[0]="dasdas1";
+    fd[1]="asdas";
+    tic.setFood_ordered(2, fd);
+    cout<<tic.getFood_ordered();
+    tic.setFlight_id(2);
+    cout<<tic.getFlight_id();
+    cout<<tic.getTicket_id();
+    tic.addNewBaggage();
+    tic.addProduct("cdasdasdas");
+    cout<<tic;
+    Ticket tic3(tic);
+    tic2=tic;
+    cout<<tic2;
+    tic++;
+    cout<<++tic;
+    tic2=tic;
+    tic2=tic2+2;
+    tic2=tic2-10;
+    if (tic == tic2){
         cout<<"\nDa";
-    else
-        cout<<"\nNU";
-    if(b<a)
-        cout<<"Da";
-    else
-        cout<<"NU";*/
-    Ticket l;
-    cin>>l;
-    l.addProduct("ag");
-    cout<<l;
+    }
+    if(tic<tic2){
+        cout<<"NU";
+    }
+    cout<<tic[1];
+    cin>>tic;*/
 
-
-
+    /*Food_list test*/
+    /*Food_list food;
+    food.setName("clvasda");
+    cout<<food.getName()<<endl;
+    food.setPrice(2.12);
+    cout<<food.getPrice()<<endl;
+    food.setQuantity(2);
+    cout<<food.getQuantity()<<endl;
+    food.setNumber_of_persons(21);
+    cout<<food.getNumber_of_persons()<<endl;
+    food.setCalories_per_serving(222);
+    cout<<food.getCalories_per_serving()<<endl;
+    cout<<food.getIdentification_code()<<endl;
+    cout<<food.totalCalories()<<endl;
+    Food_list food2,food3(food);
+    food2=food;
+    cin>>food3;
+    cout<<food3;
+    food3++;
+    food3=food3+food;
+    food=food-food3;
+    food3=food;
+    if (food == food3){
+        cout<<"\nDa";
+    }
+    if(food<food2){
+        cout<<"NU";
+    }
+    cout<<food[1];*/
     return 0;
 }

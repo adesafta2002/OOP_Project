@@ -19,7 +19,7 @@
 			</Target>
 			<Target title="CLion">
 				<Option output="C:/Users/Crowley/Desktop/CLion/cmake-build-debug/CLion.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Users/Crowley/Desktop/CLion/cmake-build-debug"/>
+				<Option working_dir=""/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -40,7 +40,7 @@
 			</Target>
 			<Target title="CLion/fast">
 				<Option output="C:/Users/Crowley/Desktop/CLion/cmake-build-debug/CLion.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="C:/Users/Crowley/Desktop/CLion/cmake-build-debug"/>
+				<Option working_dir=""/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
