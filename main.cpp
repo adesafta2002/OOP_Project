@@ -22,7 +22,7 @@ private:
 public:
     static int id_count;
     void setDeparture_coordinates(double latitude,double longitude);
-    double getDeparture_coordinates();
+    double* getDeparture_coordinates();
     void setTotal_seats(int seat_number);
     int getTotal_seats();
     void setIs_private(bool type);
@@ -195,8 +195,8 @@ void Flight::setDeparture_coordinates(double latitude,double longitude){
     this->departure_coordinates[1] = longitude;
 }
 
-double Flight::getDeparture_coordinates(){
-    return departure_coordinates[0], departure_coordinates[1];
+double* Flight::getDeparture_coordinates(){
+    return departure_coordinates;
 }
 
 void Flight::setTotal_seats(int seat_number){
@@ -296,8 +296,10 @@ string* Flight::getCrew_members_names(){
 void Flight:: setSeats_occupied(int Snumber, int *seats){
     for(int i=0; i <= this->total_seats; i++)
         seats_occupied[i]=0;
+
     for(int i=0; i<=Snumber; ++i)
         this->seats_occupied[seats[i]] = 1 ;
+
 }
 
 int* Flight::getSeats_occupied(){
@@ -330,40 +332,38 @@ Flight::Flight(double latitude, double longitude, int seat_number, bool type,cha
     this->total_seats = seat_number;
     this->is_private = type;
     this->airfield_category = category;
+    this->fuel_needed = fuel;
+    this->days_persons=days1;
+    this->days_money=days2;
+    this->company_name = company;
+    this->crew_members_number = number;
+    for(int i=1; i <= this->total_seats; i++)
+        seats_occupied[i]=0;
 
-    if(this->airport_name != nullptr)
-        delete[] this->airport_name;
     this->airport_name = new char[strlen(name)+1];
     strcpy(this->airport_name, name);
 
-    this->fuel_needed = fuel;
 
-    this->days_persons=days1;
-    if(this->persons_bookedInNDays != nullptr)
-        delete[] persons_bookedInNDays;
     this->persons_bookedInNDays = new int[days_persons];
     for(int i=0;i < days1 ; ++i)
         this->persons_bookedInNDays[i] = persons[i];
 
-    this->days_money=days2;
-    if(this->money_earnedInNDays!= nullptr)
-        delete[] money_earnedInNDays;
     this->money_earnedInNDays = new float[days_money];
-    for(int i=0;i < days1 ; ++i)
+    for(int i=0;i < days2 ; ++i)
         this->money_earnedInNDays[i] = money[i];
 
-    this->company_name = company;
-
-    this->crew_members_number = number;
-    if(this->crew_members_names != nullptr)
-        delete[] crew_members_names;
     this->crew_members_names = new string[number];
     for(int i=0; i<crew_members_number; ++i)
         this->crew_members_names[i] = names[i];
-    for(int i=1; i <= this->total_seats; i++)
-        seats_occupied[i]=0;
-    for(int i=1; i<=Snumber; ++i)
-        this->seats_occupied[seats[i]] = 1 ;
+
+    for(int i=1; i<=Snumber; ++i) {
+
+
+        if (seats[i]<=this->total_seats)
+            this->seats_occupied[seats[i]] = 1;
+        cout<<int(seats[i])<<"ASDAS"<<endl;
+
+    }
 }
 
 Flight::Flight(double latitude, double longitude):flight_id(id_count++) {
@@ -502,7 +502,7 @@ ostream& operator<<(ostream& out, const Flight& flight){
         out<<", "<<flight.crew_members_names[i];
     out<<"\nCompany name: "<<flight.company_name<<"\n";
     out<<"These seats are not available: ";
-    int pos;
+    int pos=0;
     for(int i=1 ; i<= flight.total_seats; i++)
         if(flight.seats_occupied[i] == 1) {
             out<<i;
@@ -713,6 +713,8 @@ Person::Person(string fname, string lname, int iage):person_id(id_count++) {
     this->age = iage;
 }
 Person::Person(int iage):person_id(id_count++) {
+    this->last_name = "None";
+    this->first_name = "None";
     this->age = iage;
 }
 
@@ -929,6 +931,9 @@ Ticket::Ticket(int count, bool oneway,int seat, string fname, string lname):tick
     this->seat = seat;
     this->client_Fname = fname;
     this->client_Lname = lname;
+    this->flight_id = 0;
+    this->products_number = 0;
+    this->food_ordered = nullptr;
 }
 
 Ticket::Ticket(int count, bool oneway,int seat, string fname, string lname,int flight_id,int number,string* food):ticket_id(id_count++){
@@ -939,9 +944,7 @@ Ticket::Ticket(int count, bool oneway,int seat, string fname, string lname,int f
     this->client_Lname = lname;
     this->flight_id = flight_id;
     this->products_number = number;
-    if(this->food_ordered != nullptr)
-        delete[] this->food_ordered;
-    this->food_ordered =  new string[this->products_number+1];
+    this->food_ordered =  new string[this->products_number];
     for(int i=0;  i < this->products_number; i++)
         this->food_ordered[i] = food[i];
 }
@@ -1184,6 +1187,10 @@ Food_list::Food_list(string name, float price, int QT, int number, int calories)
 
 Food_list::Food_list(string name):identification_code(count++){
     this->name = name;
+    this->price = 0;
+    this->quantity = 0;
+    this->number_of_persons = 0;
+    this->calories_per_serving = 0;
 }
 
 Food_list::~Food_list() = default;
@@ -1237,11 +1244,13 @@ int main() {
     cc= new char[2];
     cc[0]='a';
     cc[1]='b';
+    cc[2]=0;
 
     float* c;
     c = new float[2];
     c[0]=1;
     c[1]=2;
+
 
     string* l;
     l = new string[2];
@@ -1251,31 +1260,38 @@ int main() {
     int r[3];
     r[1]=2;
     r[2]=3;
-    r[3]=123;
+    r[3]=6;
+    int ll[3];
+    ll[1]=2;
+    ll[2]=3;
+    ll[3]=6;
 
-
-    /*Flight flight;
+    Flight k(1,1,20,true,'A',cc,200,2,p,2,c,"asds",2,l,3,ll);
+    cout<<k;
+    Flight flight;
+    Flight a(1,1);
+    cout<<a<<" zbor cu lat si long"<<endl;
     flight.setDeparture_coordinates(1,1);
-    cout<<flight.getDeparture_coordinates();
-    flight.setTotal_seats(2);
-    cout<<flight.getTotal_seats();
+    cout<<flight.getDeparture_coordinates()[0]<<flight.getDeparture_coordinates()[1]<<" coordonate zbor"<<endl;
+    flight.setTotal_seats(10);
+    cout<<flight.getTotal_seats()<<" locuri total"<<endl;
     flight.setIs_private(true);
-    cout<<flight.getIs_private();
+    cout<<flight.getIs_private()<<" private"<<endl;
     flight.setAirfield_category('A');
-    cout<<flight.getAirfield_category();
+    cout<<flight.getAirfield_category()<<" categorie"<<endl;
     flight.setAirport_name(cc);
-    cout<<flight.getAirport_name();
+    cout<<flight.getAirport_name()<<" nume"<<endl;
     flight.setFuel_needed(10.2);
-    cout<<flight.getFuel_needed();
+    cout<<flight.getFuel_needed()<<" fuel "<<endl;
     flight.setPersons_bookedInNDays(2,p);
-    cout<<flight.getPersons_bookedInNDays();
+    cout<<flight.getPersons_bookedInNDays()<<" persoane cazate pe zile"<<endl;
     flight.setMoney_earnedInNDays(2, c);
-    cout<<flight.getMoney_earnedInNDays();
-    cout<<flight.getFlight_id();
+    cout<<flight.getMoney_earnedInNDays()<<"bani castigati pe zile"<<endl;
+    cout<<flight.getFlight_id()<<" id zbor"<<endl;
     flight.setCompany_name("");
-    cout<<flight.getCompany_name();
+    cout<<flight.getCompany_name()<<" nume comp"<<endl;
     flight.setCrew_members_names(2, l);
-    cout<<flight.getCrew_members_names();
+    cout<<flight.getCrew_members_names()<<" nume echipa"<<endl;
     flight.setSeats_occupied(2, r);
     cout<<flight.getSeats_occupied();
     Flight b(flight),m;
@@ -1297,10 +1313,15 @@ int main() {
     }
     else
         cout<<"NU";
-    Flight asd;
-    cout<<int(asd);
-    cout<<asd[2];
+    Flight ads;
+    cout<<int(ads);
+    cout<<ads[2];
+
     Person person;
+    Person person2("Micu","Zasa",12);
+    cout<<person2;
+    Person person3(2);
+    cout<<person3;
     person.setFirst_name("abdrei");
     cout<<person.getFirst_name();
     person.setLast_name("avrea");
@@ -1326,9 +1347,19 @@ int main() {
     }
     else
         cout<<"NU";
-    cout<<person[1];*/
+    cout<<person[1];
+
     /*Ticket test*/
-    /*
+
+    string* fd2;
+    fd2= new string[1];
+    fd2[0]="12312312a1";
+
+
+    Ticket tic22(20,1,3,"Andrei","Rosu");
+    Ticket tic33(20,1,3,"Andrei","Rosu",2,1,fd2);
+    cout<<tic33;
+    cout<<tic22;
     Ticket tic,tic2;
     tic.setBaggage_count(2);
     cout<<tic.getBaggage_count();
@@ -1365,10 +1396,14 @@ int main() {
         cout<<"NU";
     }
     cout<<tic[1];
-    cin>>tic;*/
+    cin>>tic;
 
     /*Food_list test*/
-    /*Food_list food;
+    Food_list food4("paine",21,212,1,232);
+    cout<<food4;
+    Food_list food5("paine2");
+    cout<<food5;
+    Food_list food;
     food.setName("clvasda");
     cout<<food.getName()<<endl;
     food.setPrice(2.12);
@@ -1398,7 +1433,7 @@ int main() {
     Food_list per;
     per.setPrice(203.12312);
     cout<<int(per);
-    cout<<food[1];*/
+    cout<<food[1];
 
 
     return 0;
