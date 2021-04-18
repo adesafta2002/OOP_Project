@@ -736,7 +736,7 @@ Person& Person::operator=(const Person& person_sec){
 }
 
 class Ticket{
-private:
+protected:
     int baggage_count;
     bool is_oneway;
     int seat;
@@ -1021,6 +1021,173 @@ istream& operator>>(istream& in, Ticket& ticket){
     return in;
 }
 
+class FirstClass : public Ticket{
+private:
+    float ticket_price;
+    int shower_number;
+    string section_stewardess;
+public:
+    void setTicketprice(float price);
+    float getTicketprice() const;
+    void setShowernumber(int number);
+    int getShowernumber() const;
+    void setSection_stewardess(string stewardess);
+    string getSectionstewardess() const;
+    ~FirstClass();
+    FirstClass();
+    FirstClass(int count, bool oneway,int seat, string fname,
+               string lname,int flight_id,int number,string* food,float price, int shower_nmb, string stewardessname);
+    FirstClass(const FirstClass& firstclass_sec);
+    FirstClass& operator=(const FirstClass& firstclass_sec);
+    friend ostream& operator<<(ostream& out, const FirstClass& firstclass);
+    friend istream& operator>>(istream& in, FirstClass& firstclass);
+};
+    FirstClass::~FirstClass() = default;
+    FirstClass::FirstClass():Ticket() {
+        this->ticket_price = 0;
+        this-> shower_number = 0;
+        this->section_stewardess = "None";
+    }
+    FirstClass::FirstClass(int count, bool oneway,int seat, string fname, string lname,int flight_id,int number,
+                           string* food,float price, int shower_nmb, string stewardessname):Ticket(count, oneway, seat, fname, lname, flight_id, number, food){
+        this->ticket_price = price;
+        this->shower_number = shower_nmb;
+        this->section_stewardess = stewardessname;
+    }
+    FirstClass::FirstClass(const FirstClass &firstclass_sec):Ticket(firstclass_sec) {
+        this->ticket_price = firstclass_sec.ticket_price;
+        this->shower_number = firstclass_sec.shower_number;
+        this->section_stewardess = firstclass_sec.section_stewardess;
+    }
+    FirstClass& FirstClass::operator=(const FirstClass &firstclass_sec) {
+        if(this != &firstclass_sec){
+            Ticket::operator=(firstclass_sec);
+            this->ticket_price = firstclass_sec.ticket_price;
+            this->shower_number = firstclass_sec.shower_number;
+            this->section_stewardess = firstclass_sec.section_stewardess;
+        }
+        return *this;
+    }
+    ostream& operator<<(ostream& out, const FirstClass& firstclass){
+        out<<(Ticket&)firstclass;
+        out<<"\nTicket price: "<<firstclass.ticket_price;
+        out<<"\nShower number: "<<firstclass.shower_number;
+        out<<"\nStewardess name: "<<firstclass.section_stewardess;
+        return out;
+    }
+    istream& operator>>(istream& in, FirstClass& firstclass){
+        in>>(Ticket&)firstclass;
+        cout<<"\nTicket price:";
+        in>>firstclass.ticket_price;
+        cout<<"\nShower number: ";
+        in>>firstclass.shower_number;
+        cout<<"\nStewardess name:";
+        in>>firstclass.section_stewardess;
+        return in;
+    }
+    void FirstClass::setTicketprice(float price) {
+        this->ticket_price = price;
+    }
+    float FirstClass::getTicketprice() const {
+        return this->ticket_price;
+    }
+    void FirstClass::setShowernumber(int number) {
+        this->shower_number =  number;
+    }
+    int FirstClass::getShowernumber() const {
+        return this->shower_number;
+    }
+    void FirstClass::setSection_stewardess(string stewardess) {
+        this->section_stewardess =  stewardess;
+    }
+    string FirstClass::getSectionstewardess() const {
+        return this->section_stewardess;
+    }
+    class EconomyClass : public Ticket{
+    private:
+        float ticket_price;
+        int freedrinks_included;
+        string free_meal;
+    public:
+        void setTicketprice(float price);
+        float getTicketprice() const;
+        void setFreedrinksincluded(int drinks);
+        int getFreedrinksincluded() const;
+        void setFreemeal(string stewardess);
+        string getFreemeal() const;
+        ~EconomyClass();
+        EconomyClass();
+        EconomyClass(int count, bool oneway,int seat, string fname,
+                   string lname,int flight_id,int number,string* food,float price, int freedrinks, string meal);
+        EconomyClass(const EconomyClass& economyclass_sec);
+        EconomyClass& operator=(const EconomyClass& economyclass_sec);
+        friend ostream& operator<<(ostream& out, const EconomyClass& economyclass);
+        friend istream& operator>>(istream& in, EconomyClass& economyclass);
+    };
+    EconomyClass::~EconomyClass() = default;
+    EconomyClass::EconomyClass():Ticket() {
+        this->ticket_price = 0;
+        this-> freedrinks_included = 0;
+        this->free_meal = "None";
+    }
+    EconomyClass::EconomyClass(int count, bool oneway,int seat, string fname, string lname,int flight_id,int number,
+                           string* food,float price, int freedrinks, string meal):Ticket(count, oneway, seat, fname, lname, flight_id, number, food){
+        this->ticket_price = price;
+        this->freedrinks_included = freedrinks;
+        this->free_meal = meal;
+    }
+    EconomyClass::EconomyClass(const EconomyClass &economyclass_sec):Ticket(economyclass_sec) {
+        this->ticket_price = economyclass_sec.ticket_price;
+        this->freedrinks_included = economyclass_sec.freedrinks_included;
+        this->free_meal = economyclass_sec.free_meal;
+    }
+    EconomyClass& EconomyClass::operator=(const EconomyClass &economyclass_sec) {
+        if(this != &economyclass_sec){
+            Ticket::operator=(economyclass_sec);
+            this->ticket_price = economyclass_sec.ticket_price;
+            this->freedrinks_included = economyclass_sec.freedrinks_included;
+            this->free_meal = economyclass_sec.free_meal;
+        }
+        return *this;
+    }
+    ostream& operator<<(ostream& out, const EconomyClass& economyclass){
+        out<<(Ticket&) economyclass;
+        out<<"\nTicket price: "<<economyclass.ticket_price;
+        out<<"\nFreedrinks number: "<<economyclass.freedrinks_included;
+        out<<"\nFree meal: "<<economyclass.free_meal;
+        return out;
+    }
+    istream& operator>>(istream& in, EconomyClass& economyclass){
+        in>>(Ticket&) economyclass;
+        cout<<"\nTicket price:";
+        in>>economyclass.ticket_price;
+        cout<<"\nFreedrinks number: ";
+        in>>economyclass.freedrinks_included;
+        cout<<"\nFree meal:";
+        in>>economyclass.free_meal;
+        return in;
+    }
+    void EconomyClass::setTicketprice(float price) {
+        this->ticket_price = price;
+    }
+    float EconomyClass::getTicketprice() const {
+        return this->ticket_price;
+    }
+    void EconomyClass::setFreedrinksincluded(int drinks){
+        this->freedrinks_included =  drinks;
+    }
+    int EconomyClass::getFreedrinksincluded() const {
+        return this->freedrinks_included;
+    }
+    void EconomyClass::setFreemeal(string meal) {
+        this->free_meal =  meal;
+    }
+    string EconomyClass::getFreemeal() const {
+        return this->free_meal;
+    }
+
+
+
 class Food_list{
 private:
     string name;
@@ -1232,10 +1399,318 @@ ostream &operator<<(ostream &out, const Food_list food){
     out << "\nCalories per serving: " << food.calories_per_serving;
     return out;
 }
+class Drink{
+protected:
+    int quantity;
+    int price;
+    string drink_name;
+public:
+    virtual ~Drink();
+    Drink();
+    Drink(int qt, int prc, string name);
+    virtual void setQuantity(int qt);
+    virtual void setPrice(int prc);
+    virtual void setName(string name);
+    virtual void openbottle() = 0;
+};
+Drink::~Drink() = default;
+Drink::Drink() {
+    this->quantity = 0;
+    this->price = 0;
+    this->drink_name = "None";
+}
+Drink::Drink(int qt,int prc, string name) {
+    this->quantity = qt;
+    this->price =  prc;
+    this->drink_name = name;
+}
+void Drink::setQuantity(int qt) {
+    this->quantity = qt;
+}
+void Drink::setName(string name) {
+    this->drink_name = name;
+}
+void Drink::setPrice(int prc) {
+    this->price =  prc;
+}
+class NonAlcoholicDrink : public Drink{
+private:
+    bool is_sparkling;
+public:
+    void openbottle();
+    void setSparkling(bool sprk);
+    ~NonAlcoholicDrink();
+    NonAlcoholicDrink();
+    NonAlcoholicDrink(int qt, int prc, string name, bool sprk);
+    NonAlcoholicDrink(const NonAlcoholicDrink& nonalch_sec);
+    NonAlcoholicDrink& operator=(const NonAlcoholicDrink& nonalch_sec);
+    friend ostream& operator<<(ostream& out, const NonAlcoholicDrink& nonalch_sec);
+    friend istream& operator>>(istream& in, NonAlcoholicDrink& nonalch_sec);
+};
+void NonAlcoholicDrink::setSparkling(bool sprk) {
+    this->is_sparkling = sprk;
+}
+void NonAlcoholicDrink::openbottle() {
+    cout<<"You do not need a special tool";
+}
+NonAlcoholicDrink::~NonAlcoholicDrink()=default;
+NonAlcoholicDrink::NonAlcoholicDrink():Drink(){
+    this->is_sparkling = false;
+}
+NonAlcoholicDrink::NonAlcoholicDrink(int qt, int prc, string name, bool sprk):Drink(qt,prc,name) {
+    this->is_sparkling = sprk;
+}
+NonAlcoholicDrink::NonAlcoholicDrink(const NonAlcoholicDrink &nonalch_sec) {
+    this->price = nonalch_sec.price;
+    this->quantity =  nonalch_sec.quantity;
+    this->drink_name =  nonalch_sec.drink_name;
+    this->is_sparkling = nonalch_sec.is_sparkling;
+}
+NonAlcoholicDrink& NonAlcoholicDrink::operator=(const NonAlcoholicDrink &nonalch_sec) {
+    if(this != &nonalch_sec){
+        this->price = nonalch_sec.price;
+        this->quantity =  nonalch_sec.quantity;
+        this->drink_name =  nonalch_sec.drink_name;
+        this->is_sparkling = nonalch_sec.is_sparkling;
+    }
+    return *this;
+}
+ostream& operator<<(ostream& out, const NonAlcoholicDrink& nonalch_sec){
+    out<<"\nName:"<<nonalch_sec.drink_name;
+    out<<"\nPrice: "<<nonalch_sec.price;
+    out<<"\nQuantity: "<<nonalch_sec.quantity;
+    out<<"\nIs Sparkling: "<<nonalch_sec.is_sparkling;
+    return out;
+}
+istream& operator>>(istream& in, NonAlcoholicDrink& nonalch_sec){
+    cout<<"\nName: ";
+    in>>nonalch_sec.drink_name;
+    cout<<"\nPrice: ";
+    in>>nonalch_sec.price;
+    cout<<"\nQuantity: ";
+    in>>nonalch_sec.quantity;
+    cout<<"\nIs Sparkling: (0/1)";
+    in>>nonalch_sec.is_sparkling;
+    return in;
+}
+class AlcoholicDrink : public Drink{
+private:
+    int alcohol_concentration;
+    NonAlcoholicDrink workswith;
+public:
+    void openbottle() override;
+    ~AlcoholicDrink() override;
+    AlcoholicDrink();
+    AlcoholicDrink(int qt, int prc,string name, int alcprocent, NonAlcoholicDrink nonalch);
+    AlcoholicDrink(const AlcoholicDrink& alcoholic_sec);
+    AlcoholicDrink& operator=(const AlcoholicDrink& alcoholic_sec);
+    friend ostream& operator<<(ostream& out, const AlcoholicDrink& alcoholic_sec);
+    friend istream& operator>>(istream& in, AlcoholicDrink& alcoholic_sec);
+};
+void AlcoholicDrink::openbottle() {
+    cout<<"You need a special tool, it can be a beer opener or a corkscrew";
+}
+AlcoholicDrink::~AlcoholicDrink()=default;
+AlcoholicDrink::AlcoholicDrink():Drink(){
+    this->alcohol_concentration = 0;
+}
+AlcoholicDrink::AlcoholicDrink(int qt, int prc,string name, int alcprocent, NonAlcoholicDrink nonalch):Drink(qt,prc,name) {
+    this->alcohol_concentration = alcprocent;
+    this->workswith = nonalch;
+}
+AlcoholicDrink::AlcoholicDrink(const AlcoholicDrink &alcoholic_sec) {
+    this->price = alcoholic_sec.price;
+    this->quantity =  alcoholic_sec.quantity;
+    this->drink_name =  alcoholic_sec.drink_name;
+    this->alcohol_concentration = alcoholic_sec.alcohol_concentration;
+    this->workswith = alcoholic_sec.workswith;
+}
+AlcoholicDrink& AlcoholicDrink::operator=(const AlcoholicDrink &alcoholic_sec) {
+    if(this != &alcoholic_sec){
+        this->price = alcoholic_sec.price;
+        this->quantity =  alcoholic_sec.quantity;
+        this->drink_name = alcoholic_sec.drink_name;
+        this->alcohol_concentration = alcoholic_sec.alcohol_concentration;
+        this->workswith = alcoholic_sec.workswith;
+    }
+    return *this;
+}
+ostream& operator<<(ostream& out, const AlcoholicDrink& alcoholic_sec){
+    out<<"\nName:" <<alcoholic_sec.drink_name;
+    out<<"\nPrice: "<<alcoholic_sec.price;
+    out<<"\nQuantity: "<<alcoholic_sec.quantity;
+    out<<"\nAlcohol concentration: "<<alcoholic_sec.alcohol_concentration;
+    out<<"\nWorks well with the nonalcoholic drinks with the properties below:\n"<<alcoholic_sec.workswith;
+    return out;
+}
+istream& operator>>(istream& in, AlcoholicDrink& alcoholic_sec){
+    cout<<"\nName: ";
+    in>>alcoholic_sec.drink_name;
+    cout<<"\nPrice: ";
+    in>>alcoholic_sec.price;
+    cout<<"\nQuantity: ";
+    in>>alcoholic_sec.quantity;
+    cout<<"\nAlcohol concentration: ";
+    in>>alcoholic_sec.alcohol_concentration;
+    cout<<"\nWorks well with: ";
+    in>>alcoholic_sec.workswith;
+    return in;
+}
+class Document{
+public:
+    virtual ~Document();
+    virtual void askForId() = 0;
+    virtual void askForSeries() = 0;
+};
+    Document::~Document()= default;
+
+class Passport : public Document{
+private:
+    int person_id;
+    string document_series;
+    int document_number;
+public:
+    ~Passport();
+    Passport();
+    Passport(int id, string series, int number);
+    Passport(const Passport& passport_sec);
+    Passport& operator=(const Passport& passport_sec);
+    friend ostream& operator<<(ostream& out,const Passport& passport_sec);
+    friend istream& operator>>(istream& in,Passport& passport_sec);
+    void askForId();
+    void askForSeries();
+};
+
+Passport::~Passport() =  default;
+Passport::Passport() {
+    this->person_id = 0;
+    this->document_series = "None";
+    this->document_number = 0;
+}
+Passport::Passport(int id, string series, int number) {
+    this->person_id = id;
+    this->document_number = number;
+    this->document_series = series;
+}
+Passport::Passport(const Passport &passport_sec) {
+    if(this != &passport_sec){
+        this->person_id = passport_sec.person_id;
+        this->document_series = passport_sec.document_series;
+        this->document_number = passport_sec.document_number;
+    }
+}
+Passport& Passport::operator=(const Passport &passport_sec) {
+    if(this != &passport_sec){
+        this->person_id = passport_sec.person_id;
+        this->document_series = passport_sec.document_series;
+        this->document_number = passport_sec.document_number;
+    }
+    return *this;
+}
+ostream& operator<<(ostream& out,const Passport& passport_sec){
+    out<<"\nThe person id is:"<<passport_sec.person_id;
+    out<<"\nThe document series is:"<<passport_sec.document_series;
+    out<<"\nThe document number is:"<<passport_sec.document_number;
+    return out;
+}
+istream& operator>>(istream& in,Passport& passport_sec){
+    cout<<"\nThe person id is:";
+    in>>passport_sec.person_id;
+    cout<<"\nThe document series is:";
+    in>>passport_sec.document_series;
+    cout<<"\nThe document number is:";
+    in>>passport_sec.document_number;
+    return in;
+}
+void Passport::askForId() {
+    cout<<"\nThe id is: "<<this->person_id;
+}
+void Passport::askForSeries() {
+    cout<<"\nThe series is: " << this->document_series;
+    cout<<"\nThe number is: " << this->document_number;
+
+}
+
+class IdentityCard : public Document{
+private:
+    int person_id;
+    string document_series;
+    int document_number;
+public:
+    ~IdentityCard();
+    IdentityCard();
+    IdentityCard(int id, string series, int number);
+    IdentityCard(const IdentityCard& card_sec);
+    IdentityCard& operator=(const IdentityCard& card_sec);
+    friend ostream& operator<<(ostream& out,const IdentityCard& card_sec);
+    friend istream& operator>>(istream& in,IdentityCard& card_sec);
+    void askForId();
+    void askForSeries();
+};
+
+IdentityCard::~IdentityCard() =  default;
+IdentityCard::IdentityCard() {
+    this->person_id = 0;
+    this->document_series = "None";
+    this->document_number = 0;
+}
+IdentityCard::IdentityCard(int id, string series, int number) {
+    this->person_id = id;
+    this->document_number = number;
+    this->document_series = series;
+}
+IdentityCard::IdentityCard(const IdentityCard &card_sec) {
+    if(this != &card_sec){
+        this->person_id = card_sec.person_id;
+        this->document_series = card_sec.document_series;
+        this->document_number = card_sec.document_number;
+    }
+}
+IdentityCard& IdentityCard::operator=(const IdentityCard &card_sec) {
+    if(this != &card_sec){
+        this->person_id = card_sec.person_id;
+        this->document_series = card_sec.document_series;
+        this->document_number = card_sec.document_number;
+    }
+    return *this;
+}
+ostream& operator<<(ostream& out,const IdentityCard& card_sec){
+    out<<"\nThe person id is:"<<card_sec.person_id;
+    out<<"\nThe document series is:"<<card_sec.document_series;
+    out<<"\nThe document number is:"<<card_sec.document_number;
+    return out;
+}
+istream& operator>>(istream& in,IdentityCard& card_sec){
+    cout<<"\nThe person id is:";
+    in>>card_sec.person_id;
+    cout<<"\nThe document series is:";
+    in>>card_sec.document_series;
+    cout<<"\nThe document number is:";
+    in>>card_sec.document_number;
+    return in;
+}
+void IdentityCard::askForId() {
+    cout<<"\nThe id is: "<<this->person_id;
+}
+void IdentityCard::askForSeries() {
+    cout<<"\nThe series is: " << this->document_series;
+    cout<<"\nThe number is: " << this->document_number;
+
+}
+
+
+
+
+
+
+
+
+
 
 int main() {
+
     /*teste Flight*/
-    int* p;
+    /*int* p;
     p = new int[2];
     p[0]=1;
     p[1]=2;
@@ -1350,7 +1825,7 @@ int main() {
     cout<<person[1];
 
     /*Ticket test*/
-
+    /*
     string* fd2;
     fd2= new string[1];
     fd2[0]="12312312a1";
@@ -1399,7 +1874,7 @@ int main() {
     cin>>tic;
 
     /*Food_list test*/
-    Food_list food4("paine",21,212,1,232);
+    /*Food_list food4("paine",21,212,1,232);
     cout<<food4;
     Food_list food5("paine2");
     cout<<food5;
@@ -1434,6 +1909,69 @@ int main() {
     per.setPrice(203.12312);
     cout<<int(per);
     cout<<food[1];
+    string* fd2;
+    fd2= new string[1];
+    fd2[0]="12312312a1";
+    FirstClass fir1,fir2;
+    fir1.setTicketprice(2.1);
+    cout<<fir1.getTicketprice();
+    fir1.setShowernumber(2);
+    cout<<fir1.getShowernumber();
+    fir1.setSection_stewardess("ana");
+    cout<<fir1.getSectionstewardess();
+    FirstClass fir5(20,1,3,"Andrei","Rosu",2,1,fd2,2.23,3, "ana");
+    FirstClass fir3(fir1),fir4;
+    fir2 = fir1;
+    cin>>fir4;
+    cout<<fir4;
+    string* fd2;
+    fd2= new string[1];
+    fd2[0]="12312312a1";
+    EconomyClass ec1,ec2;
+    ec1.setTicketprice(2.1);
+    cout<<ec1.getTicketprice();
+    ec1.setFreedrinksincluded(2);
+    cout<<ec1.getFreedrinksincluded();
+    ec1.setFreemeal("chicken");
+    cout<<ec1.getFreemeal();
+    EconomyClass ec5(20,1,3,"Andrei","Rosu",2,1,fd2,2.23,3, "ana");
+    EconomyClass ec3(ec1),ec4;
+    ec2 = ec1;
+    cin>>ec4;
+    cout<<ec4;
+    NonAlcoholicDrink nonalch1(2,21,"aama",true);
+    NonAlcoholicDrink nonalch2(nonalch1);
+    nonalch1.openbottle();
+    cout<<nonalch2;
+    AlcoholicDrink alch1(10,21,"anaasdsa",4,nonalch1);
+    cout<<alch1;
+    AlcoholicDrink alch2;
+    alch1.openbottle();
+    //cin>>alch2;
+    cout<<alch2;
+    AlcoholicDrink alch3(alch1),alch4;
+    alch4=alch3;
+    cout<<alch4;
+
+    Passport passport1,passport2(2,"StringSeries",5123131);
+    Passport passport3(passport2);
+    Passport passport4;
+    passport4 = passport1;
+    cout<<passport4;
+    cout<<passport3;
+    cin>>passport2;
+    passport4.askForSeries();
+    passport4.askForId();
+
+    IdentityCard id1,id2(2,"StringSeries",5123131);
+    IdentityCard id3(id2);
+    IdentityCard id4;
+    id4 = id1;
+    cout<<id4;
+    cout<<id3;
+    cin>>id2;
+    id3.askForSeries();
+    id3.askForId();*/
 
 
     return 0;
