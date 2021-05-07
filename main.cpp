@@ -1,6 +1,12 @@
 #include <iostream>
 #include <cstring>
 #include <string>
+#include <fstream>
+#include <vector>
+#include <set>
+#include <map>
+#include <list>
+#include <iterator>
 using namespace std;
 class Flight{
 private:
@@ -101,17 +107,17 @@ bool Flight::operator==(const Flight& flight_sec){
         ok=0;
 
     if(ok==1)
-    if((this->departure_coordinates[0] == flight_sec.departure_coordinates[0])
-    &&(this->departure_coordinates[1] == flight_sec.departure_coordinates[1])
-    &&(this->total_seats ==  flight_sec.total_seats)
-    &&(this->is_private == flight_sec.is_private)
-    &&(this->airfield_category == flight_sec.airfield_category)
-    &&(this->fuel_needed == flight_sec.fuel_needed)
-    &&(this->days_persons == flight_sec.days_persons)
-    &&(this->days_money == flight_sec.days_money)
-    &&(this->company_name == flight_sec.company_name)
-    &&(this->crew_members_number == flight_sec.crew_members_number))
-        return true;
+        if((this->departure_coordinates[0] == flight_sec.departure_coordinates[0])
+           &&(this->departure_coordinates[1] == flight_sec.departure_coordinates[1])
+           &&(this->total_seats ==  flight_sec.total_seats)
+           &&(this->is_private == flight_sec.is_private)
+           &&(this->airfield_category == flight_sec.airfield_category)
+           &&(this->fuel_needed == flight_sec.fuel_needed)
+           &&(this->days_persons == flight_sec.days_persons)
+           &&(this->days_money == flight_sec.days_money)
+           &&(this->company_name == flight_sec.company_name)
+           &&(this->crew_members_number == flight_sec.crew_members_number))
+            return true;
 
 
     return false;
@@ -148,13 +154,13 @@ void Flight::book_seat(){
     int ok=1,seat;
     cout<<"Please select a seat from the list bellow (occupied seats are marked by X)\n";
     if(this->total_seats>9)
-    for(int i=1; i <= 9; i++)
-    {
-        if (this->seats_occupied[i]==1)
-            cout<<" X"<<" ";
-        else
-            cout<<" "<<i<<" ";
-    }
+        for(int i=1; i <= 9; i++)
+        {
+            if (this->seats_occupied[i]==1)
+                cout<<" X"<<" ";
+            else
+                cout<<" "<<i<<" ";
+        }
     else
         for(int i=1; i <= this->total_seats; i++)
         {
@@ -497,7 +503,7 @@ ostream& operator<<(ostream& out, const Flight& flight){
     out<<"\nThe ID for this flight is:"<<flight.flight_id;
     out<<"\nCrew members are:";
     if(flight.crew_members_number != 0)
-            out<<flight.crew_members_names[0];
+        out<<flight.crew_members_names[0];
     for(int i=1 ; i<flight.crew_members_number; i++)
         out<<", "<<flight.crew_members_names[i];
     out<<"\nCompany name: "<<flight.company_name<<"\n";
@@ -784,8 +790,8 @@ int Ticket::id_count=0;
 string& Ticket::operator[](int i) {
     if(i > this->products_number){
         if(products_number !=  0){
-        cout<<"Index out of range!  Returned client last name";
-        return this->food_ordered[0];}
+            cout<<"Index out of range!  Returned client last name";
+            return this->food_ordered[0];}
         else{
             return this->client_Lname;
         }
@@ -818,13 +824,13 @@ bool Ticket::operator==(const Ticket &ticket_sec) {
             ok=0;}
 
     if(ok)
-    if((this->baggage_count ==  ticket_sec.baggage_count)
-    &&(this->is_oneway == ticket_sec.is_oneway)
-    &&(this->seat == ticket_sec.seat)
-    &&(this->client_Fname == ticket_sec.client_Fname)
-    &&(this->client_Lname == ticket_sec.client_Lname)
-    &&(this->flight_id == ticket_sec.flight_id))
-        return true;
+        if((this->baggage_count ==  ticket_sec.baggage_count)
+           &&(this->is_oneway == ticket_sec.is_oneway)
+           &&(this->seat == ticket_sec.seat)
+           &&(this->client_Fname == ticket_sec.client_Fname)
+           &&(this->client_Lname == ticket_sec.client_Lname)
+           &&(this->flight_id == ticket_sec.flight_id))
+            return true;
     return false;
 }
 
@@ -904,7 +910,7 @@ void Ticket::addProduct(string name){
     string* aux;
     aux =  new string[products_number+1];
     for(int i=0;  i<this->products_number-1; i++)
-         aux[i] = this->food_ordered[i];
+        aux[i] = this->food_ordered[i];
     aux[this->products_number-1] = name;
     if(this->food_ordered != NULL)
         delete[] this->food_ordered;
@@ -1042,149 +1048,149 @@ public:
     friend ostream& operator<<(ostream& out, const FirstClass& firstclass);
     friend istream& operator>>(istream& in, FirstClass& firstclass);
 };
-    FirstClass::~FirstClass() = default;
-    FirstClass::FirstClass():Ticket() {
-        this->ticket_price = 0;
-        this-> shower_number = 0;
-        this->section_stewardess = "None";
-    }
-    FirstClass::FirstClass(int count, bool oneway,int seat, string fname, string lname,int flight_id,int number,
-                           string* food,float price, int shower_nmb, string stewardessname):Ticket(count, oneway, seat, fname, lname, flight_id, number, food){
-        this->ticket_price = price;
-        this->shower_number = shower_nmb;
-        this->section_stewardess = stewardessname;
-    }
-    FirstClass::FirstClass(const FirstClass &firstclass_sec):Ticket(firstclass_sec) {
+FirstClass::~FirstClass() = default;
+FirstClass::FirstClass():Ticket() {
+    this->ticket_price = 0;
+    this-> shower_number = 0;
+    this->section_stewardess = "None";
+}
+FirstClass::FirstClass(int count, bool oneway,int seat, string fname, string lname,int flight_id,int number,
+                       string* food,float price, int shower_nmb, string stewardessname):Ticket(count, oneway, seat, fname, lname, flight_id, number, food){
+    this->ticket_price = price;
+    this->shower_number = shower_nmb;
+    this->section_stewardess = stewardessname;
+}
+FirstClass::FirstClass(const FirstClass &firstclass_sec):Ticket(firstclass_sec) {
+    this->ticket_price = firstclass_sec.ticket_price;
+    this->shower_number = firstclass_sec.shower_number;
+    this->section_stewardess = firstclass_sec.section_stewardess;
+}
+FirstClass& FirstClass::operator=(const FirstClass &firstclass_sec) {
+    if(this != &firstclass_sec){
+        Ticket::operator=(firstclass_sec);
         this->ticket_price = firstclass_sec.ticket_price;
         this->shower_number = firstclass_sec.shower_number;
         this->section_stewardess = firstclass_sec.section_stewardess;
     }
-    FirstClass& FirstClass::operator=(const FirstClass &firstclass_sec) {
-        if(this != &firstclass_sec){
-            Ticket::operator=(firstclass_sec);
-            this->ticket_price = firstclass_sec.ticket_price;
-            this->shower_number = firstclass_sec.shower_number;
-            this->section_stewardess = firstclass_sec.section_stewardess;
-        }
-        return *this;
-    }
-    ostream& operator<<(ostream& out, const FirstClass& firstclass){
-        out<<(Ticket&)firstclass;
-        out<<"\nTicket price: "<<firstclass.ticket_price;
-        out<<"\nShower number: "<<firstclass.shower_number;
-        out<<"\nStewardess name: "<<firstclass.section_stewardess;
-        return out;
-    }
-    istream& operator>>(istream& in, FirstClass& firstclass){
-        in>>(Ticket&)firstclass;
-        cout<<"\nTicket price:";
-        in>>firstclass.ticket_price;
-        cout<<"\nShower number: ";
-        in>>firstclass.shower_number;
-        cout<<"\nStewardess name:";
-        in>>firstclass.section_stewardess;
-        return in;
-    }
-    void FirstClass::setTicketprice(float price) {
-        this->ticket_price = price;
-    }
-    float FirstClass::getTicketprice() const {
-        return this->ticket_price;
-    }
-    void FirstClass::setShowernumber(int number) {
-        this->shower_number =  number;
-    }
-    int FirstClass::getShowernumber() const {
-        return this->shower_number;
-    }
-    void FirstClass::setSection_stewardess(string stewardess) {
-        this->section_stewardess =  stewardess;
-    }
-    string FirstClass::getSectionstewardess() const {
-        return this->section_stewardess;
-    }
-    class EconomyClass : public Ticket{
-    private:
-        float ticket_price;
-        int freedrinks_included;
-        string free_meal;
-    public:
-        void setTicketprice(float price);
-        float getTicketprice() const;
-        void setFreedrinksincluded(int drinks);
-        int getFreedrinksincluded() const;
-        void setFreemeal(string stewardess);
-        string getFreemeal() const;
-        ~EconomyClass();
-        EconomyClass();
-        EconomyClass(int count, bool oneway,int seat, string fname,
-                   string lname,int flight_id,int number,string* food,float price, int freedrinks, string meal);
-        EconomyClass(const EconomyClass& economyclass_sec);
-        EconomyClass& operator=(const EconomyClass& economyclass_sec);
-        friend ostream& operator<<(ostream& out, const EconomyClass& economyclass);
-        friend istream& operator>>(istream& in, EconomyClass& economyclass);
-    };
-    EconomyClass::~EconomyClass() = default;
-    EconomyClass::EconomyClass():Ticket() {
-        this->ticket_price = 0;
-        this-> freedrinks_included = 0;
-        this->free_meal = "None";
-    }
-    EconomyClass::EconomyClass(int count, bool oneway,int seat, string fname, string lname,int flight_id,int number,
+    return *this;
+}
+ostream& operator<<(ostream& out, const FirstClass& firstclass){
+    out<<(Ticket&)firstclass;
+    out<<"\nTicket price: "<<firstclass.ticket_price;
+    out<<"\nShower number: "<<firstclass.shower_number;
+    out<<"\nStewardess name: "<<firstclass.section_stewardess;
+    return out;
+}
+istream& operator>>(istream& in, FirstClass& firstclass){
+    in>>(Ticket&)firstclass;
+    cout<<"\nTicket price:";
+    in>>firstclass.ticket_price;
+    cout<<"\nShower number: ";
+    in>>firstclass.shower_number;
+    cout<<"\nStewardess name:";
+    in>>firstclass.section_stewardess;
+    return in;
+}
+void FirstClass::setTicketprice(float price) {
+    this->ticket_price = price;
+}
+float FirstClass::getTicketprice() const {
+    return this->ticket_price;
+}
+void FirstClass::setShowernumber(int number) {
+    this->shower_number =  number;
+}
+int FirstClass::getShowernumber() const {
+    return this->shower_number;
+}
+void FirstClass::setSection_stewardess(string stewardess) {
+    this->section_stewardess =  stewardess;
+}
+string FirstClass::getSectionstewardess() const {
+    return this->section_stewardess;
+}
+class EconomyClass : public Ticket{
+private:
+    float ticket_price;
+    int freedrinks_included;
+    string free_meal;
+public:
+    void setTicketprice(float price);
+    float getTicketprice() const;
+    void setFreedrinksincluded(int drinks);
+    int getFreedrinksincluded() const;
+    void setFreemeal(string stewardess);
+    string getFreemeal() const;
+    ~EconomyClass();
+    EconomyClass();
+    EconomyClass(int count, bool oneway,int seat, string fname,
+                 string lname,int flight_id,int number,string* food,float price, int freedrinks, string meal);
+    EconomyClass(const EconomyClass& economyclass_sec);
+    EconomyClass& operator=(const EconomyClass& economyclass_sec);
+    friend ostream& operator<<(ostream& out, const EconomyClass& economyclass);
+    friend istream& operator>>(istream& in, EconomyClass& economyclass);
+};
+EconomyClass::~EconomyClass() = default;
+EconomyClass::EconomyClass():Ticket() {
+    this->ticket_price = 0;
+    this-> freedrinks_included = 0;
+    this->free_meal = "None";
+}
+EconomyClass::EconomyClass(int count, bool oneway,int seat, string fname, string lname,int flight_id,int number,
                            string* food,float price, int freedrinks, string meal):Ticket(count, oneway, seat, fname, lname, flight_id, number, food){
-        this->ticket_price = price;
-        this->freedrinks_included = freedrinks;
-        this->free_meal = meal;
-    }
-    EconomyClass::EconomyClass(const EconomyClass &economyclass_sec):Ticket(economyclass_sec) {
+    this->ticket_price = price;
+    this->freedrinks_included = freedrinks;
+    this->free_meal = meal;
+}
+EconomyClass::EconomyClass(const EconomyClass &economyclass_sec):Ticket(economyclass_sec) {
+    this->ticket_price = economyclass_sec.ticket_price;
+    this->freedrinks_included = economyclass_sec.freedrinks_included;
+    this->free_meal = economyclass_sec.free_meal;
+}
+EconomyClass& EconomyClass::operator=(const EconomyClass &economyclass_sec) {
+    if(this != &economyclass_sec){
+        Ticket::operator=(economyclass_sec);
         this->ticket_price = economyclass_sec.ticket_price;
         this->freedrinks_included = economyclass_sec.freedrinks_included;
         this->free_meal = economyclass_sec.free_meal;
     }
-    EconomyClass& EconomyClass::operator=(const EconomyClass &economyclass_sec) {
-        if(this != &economyclass_sec){
-            Ticket::operator=(economyclass_sec);
-            this->ticket_price = economyclass_sec.ticket_price;
-            this->freedrinks_included = economyclass_sec.freedrinks_included;
-            this->free_meal = economyclass_sec.free_meal;
-        }
-        return *this;
-    }
-    ostream& operator<<(ostream& out, const EconomyClass& economyclass){
-        out<<(Ticket&) economyclass;
-        out<<"\nTicket price: "<<economyclass.ticket_price;
-        out<<"\nFreedrinks number: "<<economyclass.freedrinks_included;
-        out<<"\nFree meal: "<<economyclass.free_meal;
-        return out;
-    }
-    istream& operator>>(istream& in, EconomyClass& economyclass){
-        in>>(Ticket&) economyclass;
-        cout<<"\nTicket price:";
-        in>>economyclass.ticket_price;
-        cout<<"\nFreedrinks number: ";
-        in>>economyclass.freedrinks_included;
-        cout<<"\nFree meal:";
-        in>>economyclass.free_meal;
-        return in;
-    }
-    void EconomyClass::setTicketprice(float price) {
-        this->ticket_price = price;
-    }
-    float EconomyClass::getTicketprice() const {
-        return this->ticket_price;
-    }
-    void EconomyClass::setFreedrinksincluded(int drinks){
-        this->freedrinks_included =  drinks;
-    }
-    int EconomyClass::getFreedrinksincluded() const {
-        return this->freedrinks_included;
-    }
-    void EconomyClass::setFreemeal(string meal) {
-        this->free_meal =  meal;
-    }
-    string EconomyClass::getFreemeal() const {
-        return this->free_meal;
-    }
+    return *this;
+}
+ostream& operator<<(ostream& out, const EconomyClass& economyclass){
+    out<<(Ticket&) economyclass;
+    out<<"\nTicket price: "<<economyclass.ticket_price;
+    out<<"\nFreedrinks number: "<<economyclass.freedrinks_included;
+    out<<"\nFree meal: "<<economyclass.free_meal;
+    return out;
+}
+istream& operator>>(istream& in, EconomyClass& economyclass){
+    in>>(Ticket&) economyclass;
+    cout<<"\nTicket price:";
+    in>>economyclass.ticket_price;
+    cout<<"\nFreedrinks number: ";
+    in>>economyclass.freedrinks_included;
+    cout<<"\nFree meal:";
+    in>>economyclass.free_meal;
+    return in;
+}
+void EconomyClass::setTicketprice(float price) {
+    this->ticket_price = price;
+}
+float EconomyClass::getTicketprice() const {
+    return this->ticket_price;
+}
+void EconomyClass::setFreedrinksincluded(int drinks){
+    this->freedrinks_included =  drinks;
+}
+int EconomyClass::getFreedrinksincluded() const {
+    return this->freedrinks_included;
+}
+void EconomyClass::setFreemeal(string meal) {
+    this->free_meal =  meal;
+}
+string EconomyClass::getFreemeal() const {
+    return this->free_meal;
+}
 
 
 
@@ -1562,7 +1568,7 @@ public:
     virtual void askForId() = 0;
     virtual void askForSeries() = 0;
 };
-    Document::~Document()= default;
+Document::~Document()= default;
 
 class Passport : public Document{
 private:
@@ -1708,6 +1714,72 @@ void IdentityCard::askForSeries() {
 
 
 int main() {
+    ifstream f("date.txt");
+    ofstream g("afisare.txt");
+    vector<Flight> flights;
+    map<int,Person> persons;
+    vector<Food_list> food;
+    vector<AlcoholicDrink>aldrink;
+    vector<NonAlcoholicDrink>nonaldrink;
+    int number_of_preset_flights;
+    int number_of_preset_persons;
+    int number_of_meals;
+    f>>number_of_preset_flights;
+    for(int i = 0; i < number_of_preset_flights ; ++i){
+        Flight aux;
+        f>>aux;
+        flights.push_back(aux);
+    }
+    f>>number_of_preset_persons;
+    for(int i = 0;i < number_of_preset_persons; ++i){
+        string fname;
+        string lname;
+        int age;
+        f>>fname;
+        f>>lname;
+        f>>age;
+        Person aux(fname,lname,age);
+        persons.insert(pair<int,Person>(aux.getPerson_id(),aux));
+    }
+    f>>number_of_meals;
+    for(int i = 0;i < number_of_meals; ++i){
+        string name;
+        float price;
+        int quantity;
+        int number;
+        int calories;
+        f>>name;
+        f>>price;
+        f>>quantity;
+        f>>number;
+        f>>calories;
+        Food_list aux(name,price,quantity,number,calories);
+        food.push_back(aux);
+    }
+    int number_of_alcdrinks;
+    int number_of_nonalchdrinks;
+    f>>number_of_alcdrinks;
+    for(int i = 0; i < number_of_alcdrinks; i++){
+        AlcoholicDrink aux;
+        f>>aux;
+        aldrink.push_back(aux);
+    }
+    f>>number_of_nonalchdrinks;
+    for(int i = 0; i < number_of_nonalchdrinks; i++){
+        NonAlcoholicDrink aux;
+        f>>aux;
+        nonaldrink.push_back(aux);
+    }
+    cout<<nonaldrink[0];
+    cout<<nonaldrink[1];
+    bool exit = false;
+    while(exit == false){
+
+    }
+
+
+
+
 
     /*teste Flight*/
     /*int* p;
@@ -1972,6 +2044,7 @@ int main() {
     cin>>id2;
     id3.askForSeries();
     id3.askForId();*/
+
 
 
     return 0;

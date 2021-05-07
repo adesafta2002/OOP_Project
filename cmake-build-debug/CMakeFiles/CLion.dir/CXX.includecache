@@ -6,11 +6,23 @@
 
 #IncludeRegexTransform: 
 
-C:/Users/Crowley/Desktop/CLion/main.cpp
+D:/Windows27.2021/CLion/main.cpp
 iostream
 -
 cstring
 -
 string
+-
+fstream
+-
+vector
+-
+set
+-
+map
+-
+list
+-
+iterator
 -
 
