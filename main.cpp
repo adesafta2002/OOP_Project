@@ -7,6 +7,7 @@
 #include <map>
 #include <list>
 #include <iterator>
+#include <windows.h>
 using namespace std;
 class Flight{
 private:
@@ -59,7 +60,7 @@ public:
     Flight& operator=(const Flight& flight_sec);
     friend ostream& operator<<(ostream& out, const Flight& flight);
     friend istream& operator>>(istream& in, Flight& flight);
-    void book_seat();
+    int book_seat();
     const Flight& operator++();
     const Flight operator++(int);
     Flight operator+(const Flight& flight_sec);
@@ -150,7 +151,7 @@ const Flight Flight::operator++(int) {
     return aux;
 }
 
-void Flight::book_seat(){
+int Flight::book_seat(){
     int ok=1,seat;
     cout<<"Please select a seat from the list bellow (occupied seats are marked by X)\n";
     if(this->total_seats>9)
@@ -190,9 +191,11 @@ void Flight::book_seat(){
     }
     if(ok) {
         this->seats_occupied[seat] = 1;
+        return seat;
     }
     else{
         cout<<"\nNo seat was booked!\n";
+        return -1;
     }
 }
 
@@ -1013,7 +1016,6 @@ istream& operator>>(istream& in, Ticket& ticket){
         ticket.is_oneway = true;
     else
         ticket.is_oneway = false;
-    cout<<"\nSeat: "; in>>ticket.seat;
     cout<<"\nFirst name: "; in>>ticket.client_Fname;
     cout<<"\nLast name: "; in>>ticket.client_Lname;
     cout<<"\nFlight ID: "; in>>ticket.flight_id;
@@ -1585,6 +1587,7 @@ public:
     friend istream& operator>>(istream& in,Passport& passport_sec);
     void askForId();
     void askForSeries();
+    void setPerson_id(int id);
 };
 
 Passport::~Passport() =  default;
@@ -1612,6 +1615,9 @@ Passport& Passport::operator=(const Passport &passport_sec) {
         this->document_number = passport_sec.document_number;
     }
     return *this;
+}
+void Passport::setPerson_id(int id){
+    this->person_id = id;
 }
 ostream& operator<<(ostream& out,const Passport& passport_sec){
     out<<"\nThe person id is:"<<passport_sec.person_id;
@@ -1652,8 +1658,11 @@ public:
     friend istream& operator>>(istream& in,IdentityCard& card_sec);
     void askForId();
     void askForSeries();
+    void setPerson_id(int id);
 };
-
+void IdentityCard::setPerson_id(int id){
+    this->person_id =  id;
+}
 IdentityCard::~IdentityCard() =  default;
 IdentityCard::IdentityCard() {
     this->person_id = 0;
@@ -1716,11 +1725,15 @@ void IdentityCard::askForSeries() {
 int main() {
     ifstream f("date.txt");
     ofstream g("afisare.txt");
-    vector<Flight> flights;
+    list<Flight> flights;
     map<int,Person> persons;
     vector<Food_list> food;
     vector<AlcoholicDrink>aldrink;
     vector<NonAlcoholicDrink>nonaldrink;
+    vector<FirstClass> fclasstickets;
+    int number_of_firstclass_tickets;
+    vector<EconomyClass> eclasstickets;
+    int number_of_economyclass_tickets;
     int number_of_preset_flights;
     int number_of_preset_persons;
     int number_of_meals;
@@ -1772,10 +1785,238 @@ int main() {
     }
     cout<<nonaldrink[0];
     cout<<nonaldrink[1];
-    bool exit = false;
-    while(exit == false){
+    bool personselected = false;
+    Person person_operating;
+    int option1;
+    string delimitare = "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+    while(personselected == false){
+        system("CLS");
+        cout<<endl;
+        cout<<delimitare<<endl<<endl;
+        cout<<"Press one of the following keys to continue..."<<endl;
+        cout<<"1.Select one of the preset clients.\n";
+        cout<<"2.Continue as a guest.\n";
+        cout<<endl;
+        cout<<delimitare<<endl<<endl;
+        cin>>option1;
+        switch(option1){
+            case 1:{
+                system("CLS");
+                int persnumb;
+                cout<<delimitare<<endl<<endl;
+                cout<<"Select yourself from the persons below by typing the number or type -1 to go back\n\n";
+                for(int i = 0; i < number_of_preset_persons; ++i){
+                    cout<<i;
+                    cout<<persons[i]<<endl<<endl;
+                }
+                cout<<endl;
+                cout<<delimitare<<endl<<endl;
+                cin>>persnumb;
+                if(persnumb == -1){
+                    break;
+                }
+                else if(persnumb < number_of_preset_persons){
+                    person_operating = persons[persnumb];
+                    personselected =  true;
+                    break;
+                }
+                else break;
+            }
+            case 2:{
+                cin>>person_operating;
+                personselected = true;
+                break;
+            }
+            default:{
+                break;
+            }
+        }
 
     }
+    bool document_selected = false;
+    Passport passport;
+    IdentityCard id;
+    while(document_selected == false){
+        system("CLS");
+        cout<<endl;
+        cout<<delimitare<<endl<<endl;
+        cout<<"Press one of the following keys to continue..."<<endl;
+        cout<<"1.To add a passport.\n";
+        cout<<"2.To add an id.\n";
+        cout<<endl;
+        cout<<delimitare<<endl<<endl;
+        cin>>option1;
+
+        switch(option1){
+            case 1:{
+                cout<<endl<<endl;
+                cin>>passport;
+                passport.setPerson_id(person_operating.getPerson_id());
+                document_selected = true;
+                break;
+            }
+            case 2:{
+                cout<<endl<<endl;
+                cin>>id;
+                id.setPerson_id(person_operating.getPerson_id());
+                document_selected = true;
+                break;
+            }
+            default:{
+                break;
+            }
+        }
+    }
+    int option2;
+    bool exit =  false;
+    while(exit == false){
+        system("CLS");
+        cout<<endl;
+        cout<<delimitare<<endl<<endl;
+        cout<<"Press one of the following keys to continue..."<<endl;
+        cout<<"1.To display all the available flights.\n";
+        cout<<"2.Display your full info.\n";
+        cout<<"3.Book a EconomyClass ticket.\n";
+        cout<<"4.Book a Firstclass ticket.\n";
+        cout<<"5.Display menu.\n";
+        cout<<"6.Display and save booked EconomyClass tickets.\n";
+        cout<<"7.Display and save booked FirstClass tickets.\n";
+        cout<<"8.Any other number to exit.\n";
+        cout<<endl;
+        cout<<delimitare<<endl<<endl;
+        cin>>option2;
+        switch(option2){
+            case 1:{
+                system("CLS");
+                list <Flight> :: iterator it;
+                for(it = flights.begin(); it != flights.end(); ++it)
+                    cout<< *it<<endl;
+                system("pause");
+                break;
+            }
+            case 2:{
+                system("CLS");
+                cout<<"Your personal information:\n";
+                cout<<person_operating<<endl<<endl;
+                if(option1 == 1){
+                    cout<<"Your passport:";
+                    cout<<passport<<endl<<endl;
+                }
+                else{
+                    cout<<"Your id:";
+                    cout<<id<<endl<<endl;
+                }
+                system("pause");
+                break;
+            }
+            case 3:{
+                EconomyClass aux;
+                system("CLS");
+                int flight;
+                int seat;
+                cout<<"Select a flight from the ones listed bellow by typing the flight id.\n"<<endl;
+                list <Flight> :: iterator it;
+                for(it = flights.begin(); it != flights.end(); ++it)
+                    cout<< *it<<endl;
+                cin>>flight;
+                it = flights.begin();
+                while(flight>0){
+                    it++;
+                    flight--;
+                }
+                seat = it->book_seat();
+                if(seat == -1)
+                    break;
+                cin>>aux;
+                aux.setSeat(seat);
+                eclasstickets.push_back(aux);
+                number_of_economyclass_tickets++;
+                break;
+            }
+            case 4:{
+                FirstClass aux;
+                system("CLS");
+                int flight;
+                int seat;
+                cout<<"Select a flight from the ones listed bellow by typing the flight id.\n"<<endl;
+                list <Flight> :: iterator it;
+                for(it = flights.begin(); it != flights.end(); ++it)
+                    cout<< *it<<endl;
+                cin>>flight;
+                it = flights.begin();
+                while(flight>0){
+                    it++;
+                    flight--;
+                }
+                seat = it->book_seat();
+                if(seat == -1)
+                    break;
+                cin>>aux;
+                aux.setSeat(seat);
+                fclasstickets.push_back(aux);
+                number_of_firstclass_tickets++;
+                break;
+            }
+            case 5:{
+                system("CLS");
+                cout<<delimitare<<endl<<endl;
+                cout<<"Meals:"<<endl<<endl;
+                for(int i = 0;i < number_of_meals; ++i){
+                    cout<<food[i]<<endl;
+                }
+                cout<<delimitare<<endl<<endl;
+                cout<<"Alcoholic drinks:"<<endl<<endl;
+                for(int i = 0;i < number_of_alcdrinks; ++i){
+                    cout<<aldrink[i]<<endl;
+                }
+                cout<<delimitare<<endl<<endl;
+                cout<<"Non alcoholic drinks:"<<endl<<endl;
+                for(int i = 0;i < number_of_nonalchdrinks; ++i){
+                    cout<<nonaldrink[i]<<endl;
+                }
+                system("pause");
+                cout<<delimitare<<endl<<endl;
+            }
+            case 6:{
+                system("CLS");
+                g<<endl<<endl;
+                cout<<delimitare<<endl<<endl;
+                g<<delimitare<<endl<<endl;
+                for(int i = 0; i < number_of_economyclass_tickets;i++){
+                    cout<<eclasstickets[i]<<endl;
+                    g<<eclasstickets[i]<<endl;
+                }
+                cout<<delimitare<<endl<<endl;
+                g<<delimitare<<endl<<endl;
+                system("pause");
+                break;
+            }
+            case 7:{
+                system("CLS");
+                g<<endl<<endl;
+                cout<<delimitare<<endl<<endl;
+                g<<delimitare<<endl<<endl;
+                for(int i = 0; i < number_of_firstclass_tickets;i++){
+                    cout<<fclasstickets[i]<<endl;
+                    g<<fclasstickets[i]<<endl;
+                }
+                cout<<delimitare<<endl<<endl;
+                g<<delimitare<<endl<<endl;
+                system("pause");
+                break;
+            }
+            default:{
+                system("CLS");
+                exit = true;
+                break;
+            }
+        }
+
+
+    }
+
+
+
 
 
 
